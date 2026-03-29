@@ -1,0 +1,99 @@
+﻿{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+<nav id="sidebar" class="bg-white text-gray-900 shadow-sm w-64 fixed h-full z-50 border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-8 px-1">
+    <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-blue-100 shadow-sm flex-shrink-0">
+      <img src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-full h-full object-cover" />
+    </div>
+    <div class="leading-tight">
+      <p class="text-sm font-extrabold text-gray-900">BLMC Member</p>
+      <p class="text-xs text-blue-500 font-semibold">Portal</p>
+    </div>
+  </div>
+  <a href="/member/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</a>
+  <a href="/member/ledger" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm"><i data-lucide="book-open" class="w-4 h-4"></i> Ledger</a>
+  <a href="/member/notifications" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors"><i data-lucide="bell" class="w-4 h-4"></i> Notifications</a>
+  <a href="/member/report" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i> Feedback</a>
+  <div class="mt-auto pt-4 border-t border-gray-100">
+    <button id="logout-btn" data-logout-url="/member/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-semibold text-sm transition-colors w-full text-left"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+  </div>
+</nav>
+<div class="flex-1 ml-64 min-h-screen flex flex-col" data-main>
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div><h1 class="text-2xl font-extrabold text-gray-900">My Ledger</h1><p class="text-xs text-gray-400 mt-0.5">Date - Reference - Debit - Credit - Balance</p></div>
+    <a href="/member/supply-request" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-red-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:shadow-md transition-all"><i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i> Reserve Supplies</a>
+  </div>
+  <div class="p-8 flex-1">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow"><i data-lucide="dollar-sign" class="w-5 h-5 text-white"></i></div><span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full">Balance</span></div>
+        <p class="text-2xl font-extrabold text-gray-900">{{formatCurrency member.shareBalance}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Share Balance</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow"><i data-lucide="gift" class="w-5 h-5 text-white"></i></div><span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full">5%/yr</span></div>
+        <p class="text-2xl font-extrabold text-blue-600">{{formatCurrency member.patronageRefundAccrued}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Patronage Refund</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow"><i data-lucide="trending-down" class="w-5 h-5 text-white"></i></div><span class="text-xs font-semibold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">Owed</span></div>
+        <p class="text-2xl font-extrabold text-red-500">{{formatCurrency member.loanBalance}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Loan Balance</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow"><i data-lucide="book-open" class="w-4 h-4 text-white"></i></div>
+        <div><h3 class="text-sm font-extrabold text-gray-900">Account Ledger</h3><p class="text-xs text-gray-400">Bansud Livestock Multi-Purpose Cooperative</p></div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-blue-600 text-white">
+              <th class="px-4 py-3 text-left text-xs font-bold uppercase border-r border-blue-500 w-28">Date</th>
+              <th class="px-4 py-3 text-left text-xs font-bold uppercase border-r border-blue-500">Reference</th>
+              <th class="px-4 py-3 text-right text-xs font-bold uppercase border-r border-blue-500 w-32">Debit</th>
+              <th class="px-4 py-3 text-right text-xs font-bold uppercase border-r border-blue-500 w-32">Credit</th>
+              <th class="px-4 py-3 text-right text-xs font-bold uppercase w-36">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each ledger}}
+            <tr class="border-b border-gray-100 hover:bg-blue-50/40 transition-colors">
+              <td class="px-4 py-3 text-xs text-gray-600 border-r border-gray-100 whitespace-nowrap font-mono">{{formatDate this.ledgerDate}}</td>
+              <td class="px-4 py-3 border-r border-gray-100"><p class="text-xs font-semibold text-gray-800">{{this.description}}</p><p class="text-xs text-gray-400 capitalize">{{this.category}}</p></td>
+              <td class="px-4 py-3 text-right border-r border-gray-100">{{#if (eq this.entryType 'debit')}}<span class="text-xs font-bold text-red-500">{{formatCurrency this.amount}}</span>{{else}}<span class="text-xs text-gray-300">-</span>{{/if}}</td>
+              <td class="px-4 py-3 text-right border-r border-gray-100">{{#if (eq this.entryType 'credit')}}<span class="text-xs font-bold text-green-600">{{formatCurrency this.amount}}</span>{{else}}<span class="text-xs text-gray-300">-</span>{{/if}}</td>
+              <td class="px-4 py-3 text-right"><span class="text-xs font-extrabold text-blue-600">{{formatCurrency this.balance}}</span></td>
+            </tr>
+            {{else}}
+            <tr><td colspan="5" class="px-6 py-16 text-center"><p class="text-sm text-gray-400">No ledger entries yet</p></td></tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="logout-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between"><span class="font-extrabold text-sm text-gray-900">Confirm Logout</span><button id="logout-cancel" class="text-gray-400 hover:text-gray-600 transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+    <div class="p-5"><p class="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p><div class="flex gap-3 justify-end"><button id="logout-no" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm">Cancel</button><button id="logout-confirm" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold text-sm">Logout</button></div></div>
+  </div>
+</div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+lucide.createIcons();
+(function(){
+  var btn=document.getElementById('logout-btn'),modal=document.getElementById('logout-modal');
+  if(!btn||!modal)return;
+  var hide=function(){modal.classList.add('hidden');modal.classList.remove('flex');};
+  var show=function(){modal.classList.remove('hidden');modal.classList.add('flex');};
+  btn.addEventListener('click',show);
+  document.getElementById('logout-cancel').addEventListener('click',hide);
+  document.getElementById('logout-no').addEventListener('click',hide);
+  document.getElementById('logout-confirm').addEventListener('click',function(){window.location.href=btn.getAttribute('data-logout-url')||'/member/logout';});
+})();
+</script>
+</body>
+</html>

@@ -41,7 +41,7 @@ export const isAuthenticated = async (req, res, next) => {
       return next();
     }
     if (req.session.userId) {
-      // Admin: lazily import Notification and count unpublished notifications for admin review
+      // Admin: count unpublished notifications (includes member feedback targeting 'admins')
       const models = await import("../models/index.js");
       const { Notification } = models;
       const adminUnread = await Notification.count({ where: { published: false } });

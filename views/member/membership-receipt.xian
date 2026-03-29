@@ -1,4 +1,4 @@
-{{> head}}
+﻿{{> head}}
 <body class="bg-gray-50 min-h-screen antialiased flex">
 
 <!-- Sidebar -->
@@ -14,9 +14,6 @@
   </div>
   <a href="/member/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-  </a>
-  <a href="/member/production" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
-    <i data-lucide="activity" class="w-4 h-4"></i> Production
   </a>
   <a href="/member/ledger" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
     <i data-lucide="dollar-sign" class="w-4 h-4"></i> Ledger
@@ -97,19 +94,19 @@
               <p class="text-sm font-semibold text-gray-800">Membership Fee</p>
               <p class="text-xs text-gray-400">One-time registration fee</p>
             </div>
-            <span class="text-sm font-bold text-gray-900">₱200.00</span>
+            <span class="text-sm font-bold text-gray-900">â‚±200.00</span>
           </div>
           <div class="flex justify-between items-center px-4 py-3">
             <div>
               <p class="text-sm font-semibold text-gray-800">Share Capital</p>
               <p class="text-xs text-gray-400">Initial share capital contribution</p>
             </div>
-            <span class="text-sm font-bold text-gray-900">₱10,000.00</span>
+            <span class="text-sm font-bold text-gray-900">â‚±10,000.00</span>
           </div>
         </div>
         <div class="flex justify-between items-center px-4 py-3 bg-blue-50 border-t-2 border-blue-100">
           <span class="text-sm font-extrabold text-gray-900">Total Paid</span>
-          <span class="text-base font-extrabold text-blue-600">₱10,200.00</span>
+          <span class="text-base font-extrabold text-blue-600">â‚±10,200.00</span>
         </div>
       </div>
 
@@ -122,7 +119,7 @@
       <!-- Footer -->
       <div class="border-t border-dashed border-gray-200 pt-4 text-center">
         <p class="text-xs text-gray-400">This serves as your official receipt of membership fees paid.</p>
-        <p class="text-xs text-gray-300 mt-0.5">BLMC · Poblacion, Bansud, Oriental Mindoro</p>
+        <p class="text-xs text-gray-300 mt-0.5">BLMC Â· Poblacion, Bansud, Oriental Mindoro</p>
       </div>
 
     </div>

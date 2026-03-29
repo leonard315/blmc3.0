@@ -1,4 +1,4 @@
-{{> head}}
+﻿{{> head}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -21,9 +21,6 @@
   </div>
   <a href="/member/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-  </a>
-  <a href="/member/production" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
-    <i data-lucide="activity" class="w-4 h-4"></i> Production
   </a>
   <a href="/member/ledger" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
     <i data-lucide="dollar-sign" class="w-4 h-4"></i> Ledger
@@ -83,7 +80,7 @@
                   <div id="totalAmount" class="mb-6 p-4 bg-gray-50 border border-blue-200 rounded-xl hidden">
                     <div class="flex justify-between items-center">
                       <span class="text-lg font-semibold text-gray-900">Estimated Total:</span>
-                      <span class="text-2xl font-bold text-gray-900" id="totalValue">₱0.00</span>
+                      <span class="text-2xl font-bold text-gray-900" id="totalValue">â‚±0.00</span>
                     </div>
                   </div>
                   <div class="flex gap-3">
@@ -193,7 +190,7 @@
               <div class="md:col-span-3">
                 <label class="block text-gray-200 text-sm font-bold mb-1">Total</label>
                 <div class="bg-blue-900/50 border border-blue-700 rounded-xl w-full py-3 px-4 text-yellow-300 font-semibold item-total">
-                  ₱0.00
+                  â‚±0.00
                 </div>
               </div>
               <div class="md:col-span-1 flex items-end">
@@ -260,7 +257,7 @@
             if (quantity <= 0) {
               quantityInput.setCustomValidity('Quantity must be greater than 0');
               quantityInput.classList.add('border-red-500');
-              totalDiv.textContent = '₱0.00';
+              totalDiv.textContent = 'â‚±0.00';
             } else if (quantity > stock) {
               quantityInput.setCustomValidity(`Maximum available: ${stock}`);
               quantityInput.classList.add('border-red-500');
@@ -273,7 +270,7 @@
               totalDiv.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(total);
             }
           } else {
-            totalDiv.textContent = '₱0.00';
+            totalDiv.textContent = 'â‚±0.00';
             if (quantityInput) {
               quantityInput.classList.remove('border-red-500');
             }

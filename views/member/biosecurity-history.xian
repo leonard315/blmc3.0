@@ -1,4 +1,4 @@
-{{> head}}
+﻿{{> head}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,9 +21,6 @@
   </div>
   <a href="/member/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
     <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-  </a>
-  <a href="/member/production" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
-    <i data-lucide="activity" class="w-4 h-4"></i> Production
   </a>
   <a href="/member/ledger" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
     <i data-lucide="dollar-sign" class="w-4 h-4"></i> Ledger
@@ -91,7 +88,7 @@
                   <thead class="bg-gray-100">
                     <tr>
                       <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
-                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Temperature (°C)</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Temperature (Â°C)</th>
                       <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Sanitation Status</th>
                       <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Visual Health</th>
                       <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Issues</th>
