@@ -1,0 +1,491 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>Reserve Supplies - Bansud Livestock Multi-Purpose Cooperative</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased flex">
+    
+    <!-- Sidebar -->
+<nav id="sidebar" class="bg-white text-gray-900 shadow-sm w-64 fixed h-full z-50 border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-8 px-1">
+    <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-blue-100 shadow-sm flex-shrink-0">
+      <img src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-full h-full object-cover" />
+    </div>
+    <div class="leading-tight">
+      <p class="text-sm font-extrabold text-gray-900">BLMC Member</p>
+      <p class="text-xs text-blue-500 font-semibold">Portal</p>
+    </div>
+  </div>
+  <a href="/member/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+  </a>
+  <a href="/member/production" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="activity" class="w-4 h-4"></i> Production
+  </a>
+  <a href="/member/ledger" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="dollar-sign" class="w-4 h-4"></i> Ledger
+  </a>
+  <a href="/member/notifications" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="bell" class="w-4 h-4"></i> Notifications
+  </a>
+  <a href="/member/report" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="edit-3" class="w-4 h-4"></i> Feedback
+  </a>
+
+  <div class="mt-auto pt-4 border-t border-gray-100">
+    <button id="logout-btn" data-logout-url="/member/logout"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-semibold text-sm transition-colors w-full text-left">
+      <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+    </button>
+  </div>
+</nav>
+    <!-- Main Content -->
+    <div class="flex-1 ml-64">
+        <div class="min-h-screen p-8 max-w-4xl mx-auto">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6 animate-fade-in-down">Reserve Supplies</h2>
+            {{#if error_msg}}
+              <div class="bg-red-900/20 border border-red-600 text-red-200 px-4 py-3 rounded-xl mb-4 flex items-center backdrop-blur-sm animate-fade-in">
+                <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
+                {{error_msg}}
+              </div>
+            {{/if}}
+            {{#if success_msg}}
+              <div class="bg-green-900/20 border border-green-600 text-green-200 px-4 py-3 rounded-xl mb-4 flex items-center backdrop-blur-sm animate-fade-in">
+                <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
+                {{success_msg}}
+              </div>
+            {{/if}}
+            <div class="bg-white p-6 rounded-2xl shadow border border-blue-200 mb-6 animate-fade-in">
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Add Items to Reserve</h3>
+             
+                <div id="requestItems" class="space-y-3 mb-4">
+                  <p class="text-gray-500 text-center py-6 border-2 border-dashed border-gray-200 rounded-xl">
+                    <i data-lucide="package" class="w-12 h-12 mx-auto mb-2 text-gray-400"></i>
+                    No items added yet. Click "Add Item" to start your reserve.
+                  </p>
+                </div>
+                <button onclick="addItemRow()" type="button" class="w-full bg-gradient-to-r from-red-500 to-blue-600 text-white px-4 py-3 rounded-full transition-all duration-300 font-semibold flex items-center justify-center shadow hover:shadow-md transform hover:scale-105 hover:-translate-y-1">
+                  <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
+                  <span>Add Item</span>
+                </button>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow border border-blue-200 mb-6 animate-fade-in animation-delay-200">
+                <form method="POST" action="/member/supply-request" id="requestForm">
+                  <input type="hidden" name="items" id="itemsInput">
+                 
+                  <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Notes (Optional)</label>
+                    <textarea name="notes" class="bg-white border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder:text-gray-400" rows="3" placeholder="Add any special instructions or notes for your reserve..."></textarea>
+                  </div>
+                  <div id="totalAmount" class="mb-6 p-4 bg-gray-50 border border-blue-200 rounded-xl hidden">
+                    <div class="flex justify-between items-center">
+                      <span class="text-lg font-semibold text-gray-900">Estimated Total:</span>
+                      <span class="text-2xl font-bold text-gray-900" id="totalValue">₱0.00</span>
+                    </div>
+                  </div>
+                  <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-red-500 to-blue-600 text-white font-bold py-4 px-6 rounded-full shadow hover:shadow-md transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed" id="submitBtn" disabled>
+                      <i data-lucide="check" class="w-5 h-5 mr-2"></i>
+                      <span>Submit Reserve</span>
+                    </button>
+                    <a href="/member/requests" class="flex-1 group inline-flex items-center justify-center bg-white border border-gray-200 text-gray-700 font-bold py-4 px-6 rounded-full shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+                      <i data-lucide="list" class="w-5 h-5 mr-2"></i>
+                      <span>View My Reserves</span>
+                    </a>
+                  </div>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow border border-blue-200 animate-fade-in animation-delay-400">
+                <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <i data-lucide="package" class="w-6 h-6 mr-2 text-gray-600"></i>
+                  Available Inventory Items
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {{#each items}}
+                    <div class="border rounded-xl p-4 hover:shadow-lg transition-all duration-300 {{#if (lt this.currentStock this.reorderPoint)}}border-red-200 bg-red-50{{else}}border-blue-200 bg-gray-50{{/if}}">
+                      <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-gray-900">{{this.name}}</h4>
+                        {{#if (lt this.currentStock this.reorderPoint)}}
+                          <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-semibold">Low Stock</span>
+                        {{/if}}
+                      </div>
+                      <p class="text-sm text-gray-600 mb-2">Category: <span class="font-medium capitalize">{{this.category}}</span></p>
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <p class="text-sm text-gray-700">Stock: <span class="font-semibold {{#if (lt this.currentStock this.reorderPoint)}}text-red-600{{else}}text-green-600{{/if}}">{{this.currentStock}}</span> {{this.unit}}</p>
+                        </div>
+                        <p class="text-lg font-bold text-gray-900">{{formatCurrency this.unitPrice}}<span class="text-sm text-gray-500">/{{this.unit}}</span></p>
+                      </div>
+                    </div>
+                  {{else}}
+                    <div class="col-span-2 text-center py-8 text-gray-400">
+                      <i data-lucide="package" class="w-16 h-16 mx-auto mb-4"></i>
+                      No items available at the moment.
+                    </div>
+                  {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Available items from server
+        const availableItems = [
+          {{#if items}}
+          {{#each items}}
+          {
+            id: {{this.id}},
+            name: {{#if this.name}}"{{this.name}}"{{else}}""{{/if}},
+            unit: {{#if this.unit}}"{{this.unit}}"{{else}}"unit"{{/if}},
+            unitPrice: {{this.unitPrice}},
+            currentStock: {{this.currentStock}},
+            category: {{#if this.category}}"{{this.category}}"{{else}}""{{/if}}
+          }{{#unless @last}},{{/unless}}
+          {{/each}}
+          {{/if}}
+        ];
+        let requestItems = [];
+        function addItemRow() {
+          if (!availableItems || availableItems.length === 0) {
+            alert('No items available in inventory');
+            return;
+          }
+          // Create item selection row
+          const container = document.getElementById('requestItems');
+          if (!container) {
+            console.error('Request items container not found');
+            return;
+          }
+         
+          const isEmpty = container.querySelector('.text-gray-400');
+          if (isEmpty) {
+            container.innerHTML = '';
+          }
+          const rowId = 'row-' + Date.now();
+          const row = document.createElement('div');
+          row.id = rowId;
+          row.className = 'border border-blue-700 rounded-xl p-4 bg-blue-900/30 transition-all hover:shadow-xl duration-300';
+         
+          row.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+              <div class="md:col-span-5">
+                <label class="block text-gray-200 text-sm font-bold mb-1">Item</label>
+                <select class="bg-blue-900 border border-blue-700 rounded-xl w-full py-3 px-4 text-white leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-yellow-400 placeholder:text-gray-400 shadow-inner item-select" onchange="updateItemPrice('${rowId}', this.value)">
+                  <option value="">Select an item...</option>
+                  ${availableItems.map(item => {
+                    const safeUnit = (item.unit || 'unit').replace(/"/g, '');
+                    const safeName = (item.name || '').replace(/"/g, '');
+                    return `
+                    <option value="${item.id}" data-price="${item.unitPrice || 0}" data-unit="${safeUnit}" data-stock="${item.currentStock || 0}">
+                      ${safeName} (Stock: ${item.currentStock || 0} ${safeUnit}) - ${new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(item.unitPrice || 0)}/${safeUnit}
+                    </option>
+                  `;
+                  }).join('')}
+                </select>
+              </div>
+              <div class="md:col-span-3">
+                <label class="block text-gray-200 text-sm font-bold mb-1">Quantity</label>
+                <input type="number" step="0.01" min="0.01" class="bg-blue-900 border border-blue-700 rounded-xl w-full py-3 px-4 text-white leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-yellow-400 placeholder:text-gray-400 shadow-inner item-quantity"
+                       placeholder="0" onchange="updateItemTotal('${rowId}')" oninput="updateItemTotal('${rowId}')">
+              </div>
+              <div class="md:col-span-3">
+                <label class="block text-gray-200 text-sm font-bold mb-1">Total</label>
+                <div class="bg-blue-900/50 border border-blue-700 rounded-xl w-full py-3 px-4 text-yellow-300 font-semibold item-total">
+                  ₱0.00
+                </div>
+              </div>
+              <div class="md:col-span-1 flex items-end">
+                <button type="button" onclick="removeItemRow('${rowId}')" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-3 py-3 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1">
+                  <i data-lucide="trash-2" class="w-5 h-5 mx-auto"></i>
+                </button>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-gray-400 item-info"></div>
+          `;
+         
+          container.appendChild(row);
+          updateSubmitButton();
+        }
+        function updateItemPrice(rowId, itemId) {
+          const row = document.getElementById(rowId);
+          if (!row) return;
+         
+          const select = row.querySelector('.item-select');
+          const infoDiv = row.querySelector('.item-info');
+         
+          if (!select || !infoDiv) return;
+         
+          const option = select.options[select.selectedIndex];
+         
+          if (!option || !option.value) {
+            infoDiv.innerHTML = '';
+            updateItemTotal(rowId);
+            return;
+          }
+         
+          if (option.value) {
+            const price = parseFloat(option.dataset.price) || 0;
+            let unit = option.dataset.unit || 'unit';
+            // Remove quotes if present
+            if (unit.startsWith('"') && unit.endsWith('"')) {
+              unit = unit.slice(1, -1);
+            }
+            const stock = parseFloat(option.dataset.stock) || 0;
+            infoDiv.innerHTML = `<span class="font-medium text-white">Price:</span> ${new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(price)}/${unit} | <span class="font-medium text-white">Available:</span> ${stock} ${unit}`;
+            updateItemTotal(rowId);
+          } else {
+            infoDiv.innerHTML = '';
+            updateItemTotal(rowId);
+          }
+        }
+        function updateItemTotal(rowId) {
+          const row = document.getElementById(rowId);
+          if (!row) return;
+         
+          const select = row.querySelector('.item-select');
+          const quantityInput = row.querySelector('.item-quantity');
+          const totalDiv = row.querySelector('.item-total');
+         
+          if (!select || !quantityInput || !totalDiv) return;
+         
+          const option = select.options[select.selectedIndex];
+         
+          if (option && option.value && quantityInput.value) {
+            const price = parseFloat(option.dataset.price) || 0;
+            const quantity = parseFloat(quantityInput.value) || 0;
+            const stock = parseFloat(option.dataset.stock) || 0;
+           
+            if (quantity <= 0) {
+              quantityInput.setCustomValidity('Quantity must be greater than 0');
+              quantityInput.classList.add('border-red-500');
+              totalDiv.textContent = '₱0.00';
+            } else if (quantity > stock) {
+              quantityInput.setCustomValidity(`Maximum available: ${stock}`);
+              quantityInput.classList.add('border-red-500');
+              const total = price * quantity;
+              totalDiv.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(total);
+            } else {
+              quantityInput.setCustomValidity('');
+              quantityInput.classList.remove('border-red-500');
+              const total = price * quantity;
+              totalDiv.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(total);
+            }
+          } else {
+            totalDiv.textContent = '₱0.00';
+            if (quantityInput) {
+              quantityInput.classList.remove('border-red-500');
+            }
+          }
+         
+          updateRequestItems();
+          updateTotalAmount();
+        }
+        function removeItemRow(rowId) {
+          const row = document.getElementById(rowId);
+          row.remove();
+          updateRequestItems();
+          updateTotalAmount();
+          updateSubmitButton();
+        }
+        function updateRequestItems() {
+          const rows = document.querySelectorAll('[id^="row-"]');
+          requestItems = [];
+         
+          rows.forEach(row => {
+            const select = row.querySelector('.item-select');
+            const quantityInput = row.querySelector('.item-quantity');
+           
+            if (select && select.value && quantityInput && quantityInput.value) {
+              const quantity = parseFloat(quantityInput.value);
+              if (quantity > 0 && !isNaN(quantity)) {
+                const selectedOption = select.options[select.selectedIndex];
+                const itemName = selectedOption ? selectedOption.text.split(' (')[0] : '';
+               
+                requestItems.push({
+                  itemId: parseInt(select.value),
+                  quantity: quantity,
+                  itemName: itemName
+                });
+              }
+            }
+          });
+         
+          const itemsInput = document.getElementById('itemsInput');
+          if (itemsInput) {
+            itemsInput.value = JSON.stringify(requestItems);
+          }
+        }
+        function updateTotalAmount() {
+          const totalDiv = document.getElementById('totalAmount');
+          const totalValue = document.getElementById('totalValue');
+         
+          if (!totalDiv || !totalValue) return;
+         
+          let total = 0;
+          requestItems.forEach(item => {
+            const selectedItem = availableItems.find(ai => ai.id === item.itemId);
+            if (selectedItem && item.quantity && !isNaN(item.quantity)) {
+              total += (selectedItem.unitPrice || 0) * (item.quantity || 0);
+            }
+          });
+         
+          if (total > 0) {
+            totalDiv.classList.remove('hidden');
+            totalValue.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(total);
+          } else {
+            totalDiv.classList.add('hidden');
+          }
+         
+          updateSubmitButton();
+        }
+        function updateSubmitButton() {
+          const submitBtn = document.getElementById('submitBtn');
+          if (!submitBtn) return;
+         
+          // Validate all items have valid selections and quantities
+          let isValid = requestItems.length > 0;
+         
+          if (isValid) {
+            const rows = document.querySelectorAll('[id^="row-"]');
+            rows.forEach(row => {
+              const select = row.querySelector('.item-select');
+              const quantityInput = row.querySelector('.item-quantity');
+             
+              if (!select || !select.value || !quantityInput || !quantityInput.value) {
+                isValid = false;
+              } else {
+                const quantity = parseFloat(quantityInput.value);
+                const stock = parseFloat(select.options[select.selectedIndex].dataset.stock || 0);
+               
+                if (quantity <= 0 || quantity > stock || isNaN(quantity)) {
+                  isValid = false;
+                }
+              }
+            });
+          }
+         
+          submitBtn.disabled = !isValid;
+        }
+        const requestForm = document.getElementById('requestForm');
+        if (requestForm) {
+          requestForm.addEventListener('submit', function(e) {
+            updateRequestItems();
+           
+            if (requestItems.length === 0) {
+              e.preventDefault();
+              alert('Please add at least one item to your request');
+              return false;
+            }
+           
+            // Final validation before submit
+            let hasErrors = false;
+            const rows = document.querySelectorAll('[id^="row-"]');
+           
+            rows.forEach(row => {
+              const select = row.querySelector('.item-select');
+              const quantityInput = row.querySelector('.item-quantity');
+             
+              if (!select || !select.value) {
+                hasErrors = true;
+                select.classList.add('border-red-500');
+              } else {
+                select.classList.remove('border-red-500');
+              }
+             
+              if (!quantityInput || !quantityInput.value || parseFloat(quantityInput.value) <= 0) {
+                hasErrors = true;
+                if (quantityInput) {
+                  quantityInput.classList.add('border-red-500');
+                }
+              } else {
+                if (quantityInput) {
+                  quantityInput.classList.remove('border-red-500');
+                }
+              }
+            });
+           
+            if (hasErrors) {
+              e.preventDefault();
+              alert('Please complete all item selections with valid quantities');
+              return false;
+            }
+          });
+        }
+       
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+          updateSubmitButton();
+        });
+    </script>
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Custom Animations -->
+    <style>
+        @keyframes fade-in-down {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #fbbf24, 0 0 12px #fbbf24;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        .sparkle:nth-child(odd) { animation-duration: 1.5s; }
+        .sparkle:nth-child(even) { animation-duration: 2.5s; }
+        .animate-fade-in-down { animation: fade-in-down 0.8s ease-out forwards; }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+        .animation-delay-200 { animation-delay: 0.2s; }
+        .animation-delay-400 { animation-delay: 0.4s; }
+    </style>
+
+<!-- Logout Modal -->
+<div id="logout-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+      <span class="font-extrabold text-sm text-gray-900">Confirm Logout</span>
+      <button id="logout-cancel" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <div class="p-5">
+      <p class="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p>
+      <div class="flex gap-3 justify-end">
+        <button id="logout-no" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-colors">Cancel</button>
+        <button id="logout-confirm" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold text-sm hover:shadow-md transition-all">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    const btn = document.getElementById('logout-btn');
+    const modal = document.getElementById('logout-modal');
+    if (!btn || !modal) return;
+    const hide = ()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); };
+    const show = ()=>{ modal.classList.remove('hidden'); modal.classList.add('flex'); };
+    btn.addEventListener('click', show);
+    document.getElementById('logout-cancel').addEventListener('click', hide);
+    document.getElementById('logout-no').addEventListener('click', hide);
+    document.getElementById('logout-confirm').addEventListener('click', ()=>{
+      window.location.href = btn.getAttribute('data-logout-url') || '/member/logout';
+    });
+  })();
+</script>
+</body>
+</html>

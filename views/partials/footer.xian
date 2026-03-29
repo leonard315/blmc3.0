@@ -1,0 +1,93 @@
+<footer class="mt-12 py-8 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center shadow-lg">
+          <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-900">&copy; 2025 BLMC Management System</p>
+          <p class="text-xs text-gray-600">Built with XianFire Framework at Mindoro State University</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4 text-xs text-gray-600">
+        <a href="/about" class="hover:text-blue-600 transition-colors">About</a>
+        <span class="text-gray-300">|</span>
+        <a href="/" class="hover:text-blue-600 transition-colors">Home</a>
+        <span class="text-gray-300">|</span>
+        <span class="font-semibold bg-gradient-to-r from-red-500 to-blue-600 bg-clip-text text-transparent">v1.0.0</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  if(window.lucide && lucide.createIcons) lucide.createIcons();
+</script>
+<script>
+  // Sidebar + submenu behavior (persist in localStorage)
+  (function(){
+    try{
+      const sidebar = document.getElementById('sidebar');
+      if(!sidebar) return;
+
+      // Find main content robustly across different pages
+      const main = document.querySelector('[data-main]') || document.querySelector('.flex-1') || sidebar.nextElementSibling || document.querySelector('main') || document.querySelector('body > div:not(#sidebar)');
+
+      // Create a visible toggle if not present
+      const toggle = document.getElementById('sidebar-toggle') || (()=>{
+        const b = document.createElement('button');
+        b.id = 'sidebar-toggle'; b.className='mb-4 bg-blue-800/30 px-2 py-1 rounded text-sm'; b.textContent='☰';
+        sidebar.insertBefore(b, sidebar.firstChild);
+        return b;
+      })();
+
+      // Helper to update layout sizes
+      const SIDEBAR_EXPANDED_WIDTH = sidebar.offsetWidth || 256;
+      const SIDEBAR_COLLAPSED_WIDTH = 72;
+
+      function applyLayout(collapsed){
+        if(main){
+          if(collapsed){
+            main.style.marginLeft = SIDEBAR_COLLAPSED_WIDTH + 'px';
+            sidebar.style.width = SIDEBAR_COLLAPSED_WIDTH + 'px';
+          } else {
+            main.style.marginLeft = SIDEBAR_EXPANDED_WIDTH + 'px';
+            sidebar.style.width = SIDEBAR_EXPANDED_WIDTH + 'px';
+          }
+        }
+        // store
+        localStorage.setItem('blmc_sidebar_collapsed', collapsed ? '1' : '0');
+      }
+
+      // Restore persisted collapsed state
+      const persisted = localStorage.getItem('blmc_sidebar_collapsed');
+      const collapsed = persisted === '1';
+      if(collapsed) sidebar.classList.add('collapsed');
+      applyLayout(collapsed);
+
+      toggle.addEventListener('click', ()=>{
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        applyLayout(isCollapsed);
+      });
+
+      // Setup submenu toggles (persist per-label)
+      sidebar.querySelectorAll('[data-toggle="submenu"]').forEach((btn, idx)=>{
+        const submenu = btn.nextElementSibling;
+        if(!submenu || !submenu.classList.contains('submenu')) return;
+        const label = (btn.textContent || ('submenu_'+idx)).trim().replace(/\s+/g,'_');
+        const key = 'blmc_sub_' + label;
+        const open = localStorage.getItem(key) === '1';
+        if(open) submenu.classList.remove('hidden'); else submenu.classList.add('hidden');
+        btn.addEventListener('click', (e)=>{
+          e.preventDefault();
+          const nowOpen = submenu.classList.toggle('hidden');
+          localStorage.setItem(key, !nowOpen ? '1' : '0');
+        });
+      });
+
+      if(window.lucide && lucide.createIcons) lucide.createIcons();
+    }catch(err){ console.error('Sidebar init error', err); }
+  })();
+</script>
+</body>
+</html>

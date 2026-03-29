@@ -1,0 +1,90 @@
+{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+{{> sidebar}}
+
+<div class="flex-1 ml-64 min-h-screen flex flex-col" data-main>
+
+  <!-- Top Bar -->
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">Supply Reserve Receipt</h1>
+      <p class="text-xs text-gray-400 mt-0.5">Your transaction receipt</p>
+    </div>
+    <a href="/member/requests" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 font-semibold transition-colors">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to My Reserves
+    </a>
+  </div>
+
+  <div class="p-8 flex-1 flex flex-col items-center">
+
+    {{#if receipt}}
+
+    <!-- Receipt Card (captured as image) -->
+    <div id="receipt-card" class="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-lg p-8">
+      <!-- Header -->
+      <div class="text-center border-b border-gray-100 pb-5 mb-5">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-red-500 flex items-center justify-center mx-auto mb-3 shadow">
+          <i data-lucide="receipt" class="w-6 h-6 text-white"></i>
+        </div>
+        <h2 class="text-base font-extrabold text-gray-900">Bansud Livestock Multi-Purpose Cooperative</h2>
+        <p class="text-xs text-gray-400 mt-0.5">Supply Reserve Receipt</p>
+      </div>
+
+      <!-- Receipt Content -->
+      <pre class="text-gray-700 whitespace-pre-wrap font-mono text-sm leading-relaxed">{{receipt}}</pre>
+
+      <!-- Footer -->
+      <div class="border-t border-dashed border-gray-200 mt-5 pt-4 text-center">
+        <p class="text-xs text-gray-400">Thank you for your transaction.</p>
+        <p class="text-xs text-gray-300 mt-0.5">BLMC · Poblacion, Bansud, Oriental Mindoro</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3 mt-5">
+      <button onclick="saveReceiptAsImage()"
+        class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow hover:shadow-md transition-all">
+        <i data-lucide="image" class="w-4 h-4"></i> Save as Image
+      </button>
+      <a href="/member/requests"
+        class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+      </a>
+    </div>
+
+    {{else}}
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center max-w-md w-full">
+        <i data-lucide="file-x" class="w-10 h-10 text-gray-300 mx-auto mb-3"></i>
+        <p class="text-gray-500 text-sm">No receipt found for this reserve.</p>
+        <a href="/member/requests" class="mt-4 inline-flex items-center gap-2 text-sm text-blue-600 font-semibold hover:underline">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to My Reserves
+        </a>
+      </div>
+    {{/if}}
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  function saveReceiptAsImage() {
+    const card = document.getElementById('receipt-card');
+    // Temporarily hide lucide icons (SVG) issues with html2canvas by using scale
+    html2canvas(card, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true,
+      logging: false
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'blmc-receipt.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+</script>
+</body>
+</html>

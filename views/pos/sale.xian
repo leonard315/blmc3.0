@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{> head}}
+  <title>New Sale - BLMC POS</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased flex">
+
+<!-- POS Sidebar -->
+<nav class="bg-white shadow-sm w-56 fixed h-full z-50 border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-8 px-1">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-red-500 flex items-center justify-center shadow flex-shrink-0">
+      <i data-lucide="shopping-cart" class="w-4 h-4 text-white"></i>
+    </div>
+    <div class="leading-tight">
+      <p class="text-sm font-extrabold text-gray-900">BLMC POS</p>
+      <p class="text-xs text-blue-500 font-semibold">Point of Sale</p>
+    </div>
+  </div>
+  <a href="/pos/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+  </a>
+  <a href="/pos/sale" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+    <i data-lucide="shopping-cart" class="w-4 h-4"></i> New Sale
+  </a>
+  <a href="/pos/sales-history" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="history" class="w-4 h-4"></i> Sales History
+  </a>
+  <a href="/pos/share-balance" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="piggy-bank" class="w-4 h-4"></i> Share Balance
+  </a>
+  <a href="/pos/patronage" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="percent" class="w-4 h-4"></i> Patronage Refund
+  </a>
+  <div class="mt-auto pt-4 border-t border-gray-100">
+    <a href="/pos/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-semibold text-sm transition-colors">
+      <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+    </a>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="flex-1 ml-56 min-h-screen flex flex-col">
+
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">New Sale</h1>
+      <p class="text-xs text-gray-400 mt-0.5">Select member, add products, complete sale</p>
+    </div>
+    <span id="clock" class="text-xs text-gray-400 font-mono"></span>
+  </div>
+
+  <div class="p-6 flex-1">
+
+    {{#if error_msg}}
+      <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i> {{error_msg}}
+      </div>
+    {{/if}}
+    {{#if success_msg}}
+      <div class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i> {{success_msg}}
+      </div>
+    {{/if}}
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+      <!-- LEFT: Product Catalog -->
+      <div class="xl:col-span-2 flex flex-col gap-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <div class="relative">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+            <input id="productSearch" type="text" placeholder="Search products..."
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-extrabold text-gray-900">Products</h3>
+            <div class="flex items-center gap-2">
+              <span id="productCount" class="text-xs text-gray-400"></span>
+              <button onclick="document.getElementById('addProductModal').classList.remove('hidden')"
+                class="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow hover:shadow-md transition-all">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Product
+              </button>
+            </div>
+          </div>
+          <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div class="col-span-full flex items-center justify-center py-10 text-gray-300">
+              <i data-lucide="loader" class="w-6 h-6 animate-spin"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Cart & Checkout -->
+      <div class="flex flex-col gap-4">
+
+        <!-- Member Selection -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Customer</h3>
+          <div class="relative">
+            <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+            <input id="memberSearch" type="text" placeholder="Search or select member..."
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <!-- Dropdown -->
+            <div id="memberDropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-52 overflow-y-auto">
+              <div id="memberList"></div>
+            </div>
+          </div>
+          <!-- Selected member badge -->
+          <div id="selectedMember" class="hidden mt-2 flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl px-3 py-2">
+            <div>
+              <p id="selectedMemberName" class="text-sm font-bold text-blue-800"></p>
+              <p id="selectedMemberBalance" class="text-xs text-blue-500"></p>
+            </div>
+            <button onclick="clearMember()" class="text-blue-400 hover:text-red-500 transition-colors">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div id="walkInRow" class="mt-2">
+            <input id="walkInName" type="text" placeholder="Walk-in customer name (optional)"
+              class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+        </div>
+
+        <!-- Cart -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex-1">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide">Cart</h3>
+            <button onclick="clearCart()" class="text-xs text-red-400 hover:text-red-600 font-semibold transition-colors">Clear</button>
+          </div>
+          <div id="cartItems" class="space-y-2 min-h-[80px]">
+            <p class="text-xs text-gray-400 text-center py-6">No items added yet</p>
+          </div>
+          <div class="border-t border-gray-100 mt-3 pt-3 space-y-1.5">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">Subtotal</span>
+              <span id="subtotal" class="font-semibold text-gray-800">₱0.00</span>
+            </div>
+            <div class="flex justify-between text-sm items-center">
+              <span class="text-gray-500">Discount</span>
+              <div class="flex items-center gap-1">
+                <span class="text-gray-400 text-xs">₱</span>
+                <input id="discountInput" type="number" min="0" step="0.01" value="0" oninput="updateTotals()"
+                  class="w-20 text-right border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400" />
+              </div>
+            </div>
+            <div class="flex justify-between text-base font-extrabold border-t border-gray-100 pt-2 mt-1">
+              <span class="text-gray-900">Total</span>
+              <span id="total" class="text-blue-600">₱0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Payment Method</h3>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="setPayment('cash')" id="btn-cash"
+              class="payment-btn flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 font-bold text-sm transition-all">
+              <i data-lucide="banknote" class="w-4 h-4"></i> Cash
+            </button>
+            <button onclick="setPayment('credit')" id="btn-credit"
+              class="payment-btn flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 font-bold text-sm transition-all hover:border-gray-300">
+              <i data-lucide="credit-card" class="w-4 h-4"></i> Credit
+            </button>
+            <button onclick="setPayment('debt')" id="btn-debt"
+              class="payment-btn flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 font-bold text-sm transition-all hover:border-gray-300">
+              <i data-lucide="alert-circle" class="w-4 h-4"></i> Debt
+            </button>
+          </div>
+          <p id="creditNote" class="hidden text-xs text-orange-500 mt-2 flex items-center gap-1">
+            <i data-lucide="info" class="w-3 h-3"></i> Credit adds to member's loan balance
+          </p>
+          <p id="debtNote" class="hidden text-xs text-red-500 mt-2 flex items-center gap-1">
+            <i data-lucide="info" class="w-3 h-3"></i> Debt records purchase against existing loan balance
+          </p>
+        </div>
+
+        <!-- Checkout -->
+        <form method="POST" action="/pos/sale" id="posForm">
+          <input type="hidden" name="items" id="itemsInput">
+          <input type="hidden" name="paymentMethod" id="paymentMethodInput" value="cash">
+          <input type="hidden" name="discount" id="discountHidden">
+          <input type="hidden" name="memberId" id="memberIdInput">
+          <input type="hidden" name="customerName" id="customerNameInput">
+          <button type="button" onclick="submitSale()"
+            class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 rounded-xl shadow hover:shadow-md transition-all text-sm">
+            <i data-lucide="check-circle" class="w-4 h-4"></i> Complete Sale
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+(function tick(){ const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'}); setTimeout(tick,1000); })();
+
+let cart = [], allProducts = [], selectedMemberId = null, paymentMethod = 'cash';
+
+async function loadProducts() {
+  try {
+    const res = await fetch('/api/inventory/pos-items');
+    allProducts = await res.json();
+    renderProducts(allProducts);
+    document.getElementById('productCount').textContent = allProducts.length + ' items';
+  } catch(e) {
+    document.getElementById('productGrid').innerHTML = '<p class="col-span-full text-center text-sm text-red-400 py-6">Failed to load products</p>';
+  }
+}
+
+function renderProducts(items) {
+  const grid = document.getElementById('productGrid');
+  if (!items.length) { grid.innerHTML = '<p class="col-span-full text-center text-sm text-gray-400 py-6">No products found</p>'; return; }
+  grid.innerHTML = items.map(item => `
+    <div class="group relative bg-gray-50 hover:bg-blue-50 border border-gray-100 hover:border-blue-200 rounded-xl p-3 transition-all hover:shadow-sm">
+      <!-- Edit button -->
+      <button onclick='openEditProduct(${JSON.stringify(item)})'
+        class="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white border border-gray-200 hover:bg-blue-100 hover:border-blue-300 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm z-10">
+        <i data-lucide="pencil" class="w-3 h-3 text-gray-500 hover:text-blue-600"></i>
+      </button>
+      <!-- Add to cart -->
+      <button onclick='addToCart(${JSON.stringify(item)})' class="w-full text-left">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-2 shadow">
+          <i data-lucide="package" class="w-4 h-4 text-white"></i>
+        </div>
+        <p class="text-xs font-bold text-gray-800 leading-tight group-hover:text-blue-700 truncate pr-5">${item.name}</p>
+        <p class="text-xs text-gray-400 mt-0.5 capitalize">${item.category}</p>
+        <p class="text-sm font-extrabold text-blue-600 mt-1">₱${parseFloat(item.unitPrice).toFixed(2)}</p>
+        <p class="text-xs text-gray-400">${parseFloat(item.currentStock)} ${item.unit} left</p>
+      </button>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+document.getElementById('productSearch').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  renderProducts(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)));
+});
+
+function addToCart(item) {
+  const existing = cart.find(c => c.itemId === item.id);
+  if (existing) { existing.quantity += 1; }
+  else { cart.push({ itemId: item.id, name: item.name, quantity: 1, unitPrice: parseFloat(item.unitPrice), unit: item.unit, maxStock: parseFloat(item.currentStock) }); }
+  renderCart();
+}
+
+function removeFromCart(idx) { cart.splice(idx, 1); renderCart(); }
+function clearCart() { cart = []; renderCart(); }
+function changeQty(idx, delta) { cart[idx].quantity = Math.max(1, Math.min(cart[idx].maxStock, cart[idx].quantity + delta)); renderCart(); }
+
+function renderCart() {
+  const el = document.getElementById('cartItems');
+  if (!cart.length) { el.innerHTML = '<p class="text-xs text-gray-400 text-center py-6">No items added yet</p>'; }
+  else {
+    el.innerHTML = cart.map((item, i) => `
+      <div class="flex items-center gap-2 py-2 border-b border-gray-50 last:border-0">
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-bold text-gray-800 truncate">${item.name}</p>
+          <p class="text-xs text-gray-400">₱${item.unitPrice.toFixed(2)} / ${item.unit}</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <button onclick="changeQty(${i},-1)" class="w-6 h-6 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-sm transition-colors">−</button>
+          <span class="text-xs font-bold text-gray-800 w-6 text-center">${item.quantity}</span>
+          <button onclick="changeQty(${i},1)" class="w-6 h-6 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-sm transition-colors">+</button>
+        </div>
+        <span class="text-xs font-bold text-blue-600 w-16 text-right">₱${(item.quantity * item.unitPrice).toFixed(2)}</span>
+        <button onclick="removeFromCart(${i})" class="text-gray-300 hover:text-red-400 transition-colors"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+      </div>
+    `).join('');
+  }
+  updateTotals();
+  lucide.createIcons();
+}
+
+function updateTotals() {
+  const subtotal = cart.reduce((s, i) => s + i.quantity * i.unitPrice, 0);
+  const discount = Math.max(0, parseFloat(document.getElementById('discountInput').value) || 0);
+  const total = Math.max(0, subtotal - discount);
+  document.getElementById('subtotal').textContent = '₱' + subtotal.toFixed(2);
+  document.getElementById('total').textContent = '₱' + total.toFixed(2);
+}
+
+let allMembers = [];
+let memberSearchTimer;
+
+async function loadAllMembers() {
+  try {
+    const res = await fetch('/api/members/all');
+    allMembers = res.ok ? await res.json() : [];
+  } catch { allMembers = []; }
+}
+
+function renderMemberDropdown(members) {
+  const dd = document.getElementById('memberDropdown');
+  const list = document.getElementById('memberList');
+  if (!members.length) {
+    list.innerHTML = '<p class="text-xs text-gray-400 text-center py-3">No members found</p>';
+  } else {
+    list.innerHTML = members.map(m => `
+      <button type="button" onclick='selectMember(${JSON.stringify(m)})'
+        class="w-full text-left px-4 py-2.5 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0">
+        <p class="text-sm font-bold text-gray-800">${m.firstName} ${m.lastName}</p>
+        <p class="text-xs text-gray-400">${m.memberId} · Loan: ₱${parseFloat(m.loanBalance||0).toFixed(2)}</p>
+      </button>
+    `).join('');
+  }
+  dd.classList.remove('hidden');
+}
+
+document.getElementById('memberSearch').addEventListener('focus', function() {
+  const q = this.value.trim().toLowerCase();
+  renderMemberDropdown(q ? allMembers.filter(m =>
+    (m.firstName+' '+m.lastName).toLowerCase().includes(q) || m.memberId.toLowerCase().includes(q)
+  ) : allMembers);
+});
+
+document.getElementById('memberSearch').addEventListener('input', function() {
+  clearTimeout(memberSearchTimer);
+  const q = this.value.trim().toLowerCase();
+  memberSearchTimer = setTimeout(() => {
+    renderMemberDropdown(q ? allMembers.filter(m =>
+      (m.firstName+' '+m.lastName).toLowerCase().includes(q) || m.memberId.toLowerCase().includes(q)
+    ) : allMembers);
+  }, 150);
+});
+
+loadAllMembers();
+
+function selectMember(m) {
+  selectedMemberId = m.memberId;
+  document.getElementById('memberSearch').value = '';
+  document.getElementById('memberDropdown').classList.add('hidden');
+  document.getElementById('selectedMemberName').textContent = m.firstName + ' ' + m.lastName;
+  document.getElementById('selectedMemberBalance').textContent = m.memberId + ' · Loan: ₱' + parseFloat(m.loanBalance||0).toFixed(2);
+  document.getElementById('selectedMember').classList.remove('hidden');
+  document.getElementById('walkInRow').classList.add('hidden');
+}
+
+function clearMember() {
+  selectedMemberId = null;
+  document.getElementById('selectedMember').classList.add('hidden');
+  document.getElementById('walkInRow').classList.remove('hidden');
+  document.getElementById('memberSearch').value = '';
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#memberSearch') && !e.target.closest('#memberDropdown'))
+    document.getElementById('memberDropdown').classList.add('hidden');
+});
+
+function setPayment(method) {
+  paymentMethod = method;
+  document.getElementById('paymentMethodInput').value = method === 'debt' ? 'credit' : method; // debt maps to credit in backend
+  document.querySelectorAll('.payment-btn').forEach(b => {
+    b.classList.remove('border-blue-500','bg-blue-50','text-blue-700','border-orange-400','bg-orange-50','text-orange-700','border-red-400','bg-red-50','text-red-700');
+    b.classList.add('border-gray-200','text-gray-500');
+  });
+  const active = document.getElementById('btn-' + method);
+  if (active) {
+    if (method === 'cash') active.classList.add('border-blue-500','bg-blue-50','text-blue-700');
+    else if (method === 'credit') active.classList.add('border-orange-400','bg-orange-50','text-orange-700');
+    else if (method === 'debt') active.classList.add('border-red-400','bg-red-50','text-red-700');
+    active.classList.remove('border-gray-200','text-gray-500');
+  }
+  document.getElementById('creditNote').classList.toggle('hidden', method !== 'credit');
+  document.getElementById('debtNote').classList.toggle('hidden', method !== 'debt');
+}
+
+function submitSale() {
+  if (!cart.length) { alert('Please add at least one item.'); return; }
+  if ((paymentMethod === 'credit' || paymentMethod === 'debt') && !selectedMemberId) {
+    alert('Credit/Debt payment requires a member to be selected.'); return;
+  }
+  const discount = Math.max(0, parseFloat(document.getElementById('discountInput').value) || 0);
+  document.getElementById('itemsInput').value = JSON.stringify(cart.map(i => ({ itemId: i.itemId, name: i.name, quantity: i.quantity, unitPrice: i.unitPrice, unit: i.unit })));
+  document.getElementById('discountHidden').value = discount;
+  document.getElementById('memberIdInput').value = selectedMemberId || '';
+  document.getElementById('customerNameInput').value = document.getElementById('walkInName').value || '';
+  document.getElementById('posForm').submit();
+}
+
+loadProducts();
+
+function openEditProduct(item) {
+  document.getElementById('editProductId').value = item.id;
+  document.getElementById('editProductName').value = item.name;
+  document.getElementById('editProductCategory').value = item.category;
+  document.getElementById('editProductUnit').value = item.unit;
+  document.getElementById('editProductPrice').value = parseFloat(item.unitPrice).toFixed(2);
+  document.getElementById('editProductStock').value = parseFloat(item.currentStock);
+  document.getElementById('editProductModal').classList.remove('hidden');
+}
+</script>
+
+<!-- Add Product Modal -->
+<div id="addProductModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-md overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow">
+          <i data-lucide="package-plus" class="w-4 h-4 text-white"></i>
+        </div>
+        <h3 class="text-base font-extrabold text-gray-900">Add New Product</h3>
+      </div>
+      <button onclick="document.getElementById('addProductModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <form method="POST" action="/pos/products/add" class="px-6 py-5 space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Product Name</label>
+        <input type="text" name="name" required placeholder="e.g. Broiler Feed 25kg"
+          class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Category</label>
+          <select name="category" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <option value="">-- Select --</option>
+            <option value="feeds">Feeds</option>
+            <option value="chicks">Chicks</option>
+            <option value="medicine">Medicine</option>
+            <option value="equipment">Equipment</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Unit</label>
+          <input type="text" name="unit" required placeholder="e.g. bag, kg, pcs"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Unit Price (₱)</label>
+          <input type="number" name="unitPrice" required min="0" step="0.01" placeholder="0.00"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Initial Stock</label>
+          <input type="number" name="currentStock" required min="0" step="0.01" placeholder="0"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="document.getElementById('addProductModal').classList.add('hidden')"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-colors">
+          Cancel
+        </button>
+        <button type="submit"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-sm shadow hover:shadow-md transition-all">
+          Add Product
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Edit Product Modal -->
+<div id="editProductModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-md overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow">
+          <i data-lucide="pencil" class="w-4 h-4 text-white"></i>
+        </div>
+        <h3 class="text-base font-extrabold text-gray-900">Edit Product</h3>
+      </div>
+      <button onclick="document.getElementById('editProductModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <form method="POST" action="/pos/products/edit" class="px-6 py-5 space-y-4">
+      <input type="hidden" name="id" id="editProductId">
+      <div>
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Product Name</label>
+        <input type="text" name="name" id="editProductName" required
+          class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Category</label>
+          <select name="category" id="editProductCategory" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <option value="feeds">Feeds</option>
+            <option value="chicks">Chicks</option>
+            <option value="medicine">Medicine</option>
+            <option value="equipment">Equipment</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Unit</label>
+          <input type="text" name="unit" id="editProductUnit" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Unit Price (₱)</label>
+          <input type="number" name="unitPrice" id="editProductPrice" required min="0" step="0.01"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Current Stock</label>
+          <input type="number" name="currentStock" id="editProductStock" required min="0" step="0.01"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        </div>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="document.getElementById('editProductModal').classList.add('hidden')"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-colors">
+          Cancel
+        </button>
+        <button type="submit"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm shadow hover:shadow-md transition-all">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

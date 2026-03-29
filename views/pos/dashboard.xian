@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{> head}}
+  <title>POS Dashboard - BLMC</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased flex">
+
+<!-- POS Sidebar -->
+<nav class="bg-white shadow-sm w-56 fixed h-full z-50 border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-8 px-1">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-red-500 flex items-center justify-center shadow flex-shrink-0">
+      <i data-lucide="shopping-cart" class="w-4 h-4 text-white"></i>
+    </div>
+    <div class="leading-tight">
+      <p class="text-sm font-extrabold text-gray-900">BLMC POS</p>
+      <p class="text-xs text-blue-500 font-semibold">Point of Sale</p>
+    </div>
+  </div>
+
+  <a href="/pos/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+  </a>
+  <a href="/pos/sale" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="shopping-cart" class="w-4 h-4"></i> New Sale
+  </a>
+  <a href="/pos/sales-history" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="history" class="w-4 h-4"></i> Sales History
+  </a>
+  <a href="/pos/share-balance" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="piggy-bank" class="w-4 h-4"></i> Share Balance
+  </a>
+  <a href="/pos/patronage" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="percent" class="w-4 h-4"></i> Patronage Refund
+  </a>
+
+  <div class="mt-auto pt-4 border-t border-gray-100">
+    <a href="/pos/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-semibold text-sm transition-colors">
+      <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+    </a>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="flex-1 ml-56 min-h-screen flex flex-col">
+
+  <!-- Top Bar -->
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">POS Dashboard</h1>
+      <p class="text-xs text-gray-400 mt-0.5">Sales overview</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="clock" class="text-xs text-gray-400 font-mono"></span>
+      <a href="/pos/sale" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-red-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:shadow-md transition-all">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i> New Sale
+      </a>
+    </div>
+  </div>
+
+  <div class="p-8 flex-1">
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow">
+            <i data-lucide="sun" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full">Today</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{formatCurrency todaySales}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Today's Sales</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow">
+            <i data-lucide="receipt" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">Today</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{todayTransactions}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Transactions</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow">
+            <i data-lucide="calendar" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full">Month</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{formatCurrency monthlySales}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Monthly Sales</p>
+      </div>
+    </div>
+
+    <!-- Recent Sales -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="text-sm font-extrabold text-gray-900">Recent Sales</h3>
+        <a href="/pos/sales-history" class="text-xs text-blue-600 font-semibold hover:underline">View all</a>
+      </div>
+      {{#if recentSales.length}}
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100">
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Date</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Customer</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Payment</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Total</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              {{#each recentSales}}
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-3 text-xs text-gray-500">{{formatDate this.orderDate}}</td>
+                <td class="px-5 py-3 text-sm font-semibold text-gray-800">{{this.customerName}}</td>
+                <td class="px-5 py-3">
+                  <span class="text-xs font-bold px-2 py-1 rounded-full {{#if (eq this.paymentMethod 'cash')}}bg-green-100 text-green-700{{else}}bg-orange-100 text-orange-700{{/if}}">
+                    {{this.paymentMethod}}
+                  </span>
+                </td>
+                <td class="px-5 py-3 text-sm font-extrabold text-blue-600">{{formatCurrency this.total}}</td>
+                <td class="px-5 py-3">
+                  <span class="text-xs font-bold px-2 py-1 rounded-full {{#if (eq this.paymentStatus 'paid')}}bg-green-100 text-green-700{{else}}bg-yellow-100 text-yellow-700{{/if}}">
+                    {{this.paymentStatus}}
+                  </span>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{else}}
+        <div class="p-12 text-center">
+          <i data-lucide="inbox" class="w-10 h-10 text-gray-200 mx-auto mb-3"></i>
+          <p class="text-sm text-gray-400">No sales yet today</p>
+        </div>
+      {{/if}}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  (function tick(){ const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'}); setTimeout(tick,1000); })();
+</script>
+</body>
+</html>

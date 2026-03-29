@@ -1,0 +1,22 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Programs & Training - BLMC</title>
+</head>
+<body class="bg-gradient-to-br from-blue-950 to-blue-900 min-h-screen text-white">
+    {{> head}}
+    <div class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-extrabold mb-4">Programs & Training</h1>
+        <p class="text-lg text-gray-200 mb-6">BLMC runs community training programs focused on livestock husbandry, biosecurity, and smallholder business skills. Our programs include:</p>
+        <ul class="list-disc list-inside text-gray-200 space-y-2">
+            <li>Livestock Management & Welfare</li>
+            <li>Biosecurity and Disease Prevention</li>
+            <li>Feed and Nutrition Workshops</li>
+            <li>Small Business & Cooperative Governance</li>
+        </ul>
+        <p class="mt-6 text-gray-300">These programs are run periodically in Poblacion, Bansud — contact the cooperative to find the next available schedule.</p>
+    </div>
+    {{> footer }}
+</body>
+</html>

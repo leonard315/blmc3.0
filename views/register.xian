@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head }}
+    <title>Register Admin/Staff - Bansud Livestock Multi-Purpose Cooperative</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-950 to-blue-900 min-h-screen antialiased flex items-center justify-center">
+    <!-- Subtle Sparkle Background -->
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute inset-0 sparkle-container">
+            <div class="sparkle"></div>
+            <div class="sparkle" style="left: 20%; top: 30%; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="left: 60%; top: 20%; animation-delay: 1s;"></div>
+            <div class="sparkle" style="left: 80%; top: 70%; animation-delay: 1.5s;"></div>
+            <div class="sparkle" style="left: 40%; top: 80%; animation-delay: 2s;"></div>
+            <div class="sparkle" style="left: 10%; top: 50%; animation-delay: 2.5s;"></div>
+            <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 3s;"></div>
+            <div class="sparkle" style="left: 30%; top: 10%; animation-delay: 3.5s;"></div>
+        </div>
+    </div>
+    <div class="bg-blue-900 p-8 rounded-3xl shadow-2xl w-full max-w-md border border-red-600 relative z-10 backdrop-blur-sm bg-opacity-95 animate-fade-in">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center shadow-xl">
+                <i data-lucide="user-plus" class="w-8 h-8 text-blue-900"></i>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-2">Register Admin/Staff</h2>
+            <p class="text-red-200 text-sm font-semibold animate-pulse">Create Your Secure Account</p>
+        </div>
+       
+        {{#if error_msg}}
+          <div class="bg-red-900/20 border border-red-600 text-red-200 px-4 py-3 rounded-xl mb-6 backdrop-blur-sm">
+            {{error_msg}}
+          </div>
+        {{/if}}
+        <form method="POST" action="/register">
+          <div class="mb-6">
+            <label class="block text-gray-200 text-sm font-bold mb-2" for="name">Full Name</label>
+            <div class="relative">
+                <i data-lucide="user" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-300"></i>
+                <input class="bg-blue-800 border border-blue-700 rounded-xl w-full py-3 px-10 text-white leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-yellow-400 placeholder:text-gray-400 shadow-inner"
+                       type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+          </div>
+         
+          <div class="mb-6">
+            <label class="block text-gray-200 text-sm font-bold mb-2" for="email">Email</label>
+            <div class="relative">
+                <i data-lucide="mail" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-300"></i>
+                <input class="bg-blue-800 border border-blue-700 rounded-xl w-full py-3 px-10 text-white leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-yellow-400 placeholder:text-gray-400 shadow-inner"
+                       type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+          </div>
+         
+          <div class="mb-6">
+            <label class="block text-gray-200 text-sm font-bold mb-2" for="password">Password</label>
+            <div class="relative">
+                <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-300"></i>
+                <input class="bg-blue-800 border border-blue-700 rounded-xl w-full py-3 px-10 pr-12 text-white leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-yellow-400 placeholder:text-gray-400 shadow-inner"
+                       type="password" id="password" name="password" placeholder="Enter your password" required>
+                <button type="button" onclick="togglePassword('password', 'eye-icon-password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 focus:outline-none transition-colors">
+                  <i data-lucide="eye" id="eye-icon-password" class="w-5 h-5"></i>
+                </button>
+            </div>
+          </div>
+         
+          <div class="mb-8">
+            <label class="block text-gray-200 text-sm font-bold mb-2" for="role">Role</label>
+            <div class="relative">
+                <i data-lucide="shield" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-300"></i>
+                <select class="bg-blue-800 border border-blue-700 rounded-xl w-full py-3 px-10 text-white leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-yellow-400 shadow-inner appearance-none"
+                        id="role" name="role" required>
+                  <option value="admin">Admin</option>
+                  <option value="staff" selected>Staff</option>
+                </select>
+            </div>
+          </div>
+         
+          <button class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-xl w-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center justify-center space-x-2 group" type="submit">
+            <i data-lucide="user-plus" class="w-5 h-5 group-hover:animate-pulse"></i>
+            <span>Register</span>
+          </button>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-300">
+          <a href="/login" class="text-yellow-300 hover:text-yellow-400 font-semibold hover:underline">Already have an account? Login</a>
+        </p>
+    </div>
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Custom Animations -->
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #fbbf24, 0 0 12px #fbbf24;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        .sparkle:nth-child(odd) { animation-duration: 1.5s; }
+        .sparkle:nth-child(even) { animation-duration: 2.5s; }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+    </style>
+    
+    <script>
+      // Toggle password visibility
+      function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.setAttribute('data-lucide', 'eye-off');
+        } else {
+          input.type = 'password';
+          icon.setAttribute('data-lucide', 'eye');
+        }
+        
+        // Re-create Lucide icons
+        if (window.lucide) lucide.createIcons();
+      }
+    </script>
+</body>
+</html>

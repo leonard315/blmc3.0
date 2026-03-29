@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <title>About BLMC - Bansud Livestock Multi-Purpose Cooperative</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased">
+
+<!-- Navbar -->
+<nav class="bg-white/95 backdrop-blur-md text-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl overflow-hidden border-2 border-blue-100 shadow-sm flex-shrink-0">
+                <img src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-full h-full object-cover" />
+            </div>
+            <div class="leading-tight">
+                <p class="text-base font-extrabold text-gray-900 tracking-tight">Bansud Livestock</p>
+                <p class="text-xs font-semibold text-red-500 -mt-0.5">Multi-Purpose Cooperative</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-600">
+                <a href="/#services" class="hover:text-blue-600 transition-colors">Services</a>
+                <a href="/#how-to-join" class="hover:text-blue-600 transition-colors">How to Join</a>
+                <a href="/about" class="text-blue-600">About</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="/login" class="text-sm font-semibold text-blue-600 border border-blue-200 px-4 py-2 rounded-full hover:bg-blue-50 transition-colors">Admin</a>
+                <a href="/member/login" class="text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-blue-600 px-4 py-2 rounded-full shadow hover:shadow-md transition-all">Member Login</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="bg-white border-b border-gray-100 py-14">
+    <div class="container mx-auto px-6 text-center">
+        <span class="inline-block bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">About Us</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">About BLMC</h1>
+        <p class="text-gray-500 max-w-2xl mx-auto text-sm leading-relaxed">
+            Bansud Livestock Multi-Purpose Cooperative is a CDA-registered cooperative dedicated to empowering livestock raisers and farmers in Bansud, Oriental Mindoro through collective action and shared resources.
+        </p>
+    </div>
+</section>
+
+<!-- Mission / Vision / Values -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow">
+                    <i data-lucide="target" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-2">Our Mission</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">To provide accessible financial services, quality inputs, and capacity-building programs that improve the livelihoods of our members and their families.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mx-auto mb-4 shadow">
+                    <i data-lucide="eye" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-2">Our Vision</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">A self-reliant and progressive cooperative community where every member thrives through unity, integrity, and sustainable livestock farming practices.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-4 shadow">
+                    <i data-lucide="heart" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-2">Our Values</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Integrity, solidarity, transparency, and service — the core values that guide every decision and action of the cooperative.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Registration Info -->
+<section class="py-10 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-6">
+        <div class="bg-gray-50 rounded-2xl border border-gray-100 p-8 max-w-2xl mx-auto text-center">
+            <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Registered with the Cooperative Development Authority</p>
+            <p class="text-gray-700 font-semibold text-sm">CDA Reg. No. 9520-04000617 &nbsp;·&nbsp; CIN-0107040018 &nbsp;·&nbsp; TIN No. 004-972-048-000</p>
+            <p class="text-gray-400 text-sm mt-1">Poblacion, Bansud, Oriental Mindoro</p>
+            <div class="mt-5">
+                <a href="/#contact" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-blue-600 text-white px-6 py-2.5 rounded-full font-semibold text-sm shadow hover:shadow-md transition-all">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Location Map -->
+<section class="py-16 bg-gray-50 border-t border-gray-100">
+    <div class="container mx-auto px-6 max-w-4xl">
+        <div class="text-center mb-8">
+            <span class="inline-block bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-3">Location</span>
+            <h2 class="text-2xl font-extrabold text-gray-900">Find Us</h2>
+            <p class="text-gray-500 text-sm mt-1">BLMC Cooperative Office, Poblacion, Bansud, Oriental Mindoro</p>
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-sm border border-gray-100 h-80">
+            <iframe
+                width="100%" height="100%" frameborder="0" style="border:0"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps?q=Poblacion+Bansud+Oriental+Mindoro&output=embed"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <p class="text-center text-xs text-gray-400 mt-3">Open the map above for navigation or contact the cooperative during office hours.</p>
+    </div>
+</section>
+
+{{> footer}}
+</body>
+</html>

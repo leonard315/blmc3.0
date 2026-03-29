@@ -1,0 +1,135 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Member Management - Bansud Livestock Multi-Purpose Cooperative</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+    <!-- Subtle Sparkle Background -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 sparkle-container">
+            <div class="sparkle"></div>
+            <div class="sparkle" style="left: 20%; top: 30%; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="left: 60%; top: 20%; animation-delay: 1s;"></div>
+            <div class="sparkle" style="left: 80%; top: 70%; animation-delay: 1.5s;"></div>
+            <div class="sparkle" style="left: 40%; top: 80%; animation-delay: 2s;"></div>
+            <div class="sparkle" style="left: 10%; top: 50%; animation-delay: 2.5s;"></div>
+            <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 3s;"></div>
+            <div class="sparkle" style="left: 30%; top: 10%; animation-delay: 3.5s;"></div>
+        </div>
+    </div>
+    {{> sidebar}}
+    <!-- Main Content -->
+    <div class="flex-1 ml-64">
+        {{#if error_msg}}
+          <div class="bg-red-50 border border-red-500 text-red-600 px-4 py-3 rounded-xl relative mb-4 ml-4 mt-4 max-w-2xl backdrop-blur-sm animate-fade-in">
+            {{error_msg}}
+          </div>
+        {{/if}}
+        {{#if success_msg}}
+          <div class="bg-blue-50 border border-blue-500 text-blue-600 px-4 py-3 rounded-xl relative mb-4 ml-4 mt-4 max-w-2xl backdrop-blur-sm animate-fade-in">
+            {{success_msg}}
+          </div>
+        {{/if}}
+        <div class="min-h-screen p-8">
+            <div class="flex justify-between items-center mb-6 animate-fade-in">
+                <h2 class="text-4xl font-extrabold text-blue-600">Member Management</h2>
+                <a href="/admin/members/new" class="group inline-flex items-center space-x-2 bg-gradient-to-r from-red-500 to-blue-600 hover:from-red-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
+                    <i data-lucide="user-plus" class="w-5 h-5"></i>
+                    <span>Register New Member</span>
+                </a>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-blue-200 mb-6 animate-fade-in">
+                <form method="GET" action="/admin/members" class="flex gap-6 items-end">
+                  <div class="flex-1">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Search Members</label>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                        <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400" type="text" name="search" placeholder="Search members..." value="{{search}}">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Status</label>
+                    <div class="relative">
+                        <i data-lucide="filter" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                        <select class="w-full py-3 px-10 leading-tight appearance-none" name="status">
+                          <option value="all" {{#if (eq currentStatus 'all')}}selected{{/if}}>All Status</option>
+                          <option value="active" {{#if (eq currentStatus 'active')}}selected{{/if}}>Active</option>
+                          <option value="pending" {{#if (eq currentStatus 'pending')}}selected{{/if}}>Pending</option>
+                          <option value="inactive" {{#if (eq currentStatus 'inactive')}}selected{{/if}}>Inactive</option>
+                        </select>
+                    </div>
+                  </div>
+                  <button class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center space-x-2 group" type="submit">
+                      <i data-lucide="filter" class="w-4 h-4 group-hover:animate-pulse"></i>
+                      <span>Filter</span>
+                  </button>
+                </form>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg border border-blue-200 overflow-hidden animate-fade-in">
+                <table class="min-w-full">
+                  <thead class="bg-gray-100 border-b border-blue-200">
+                    <tr>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Member ID</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Name</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Email</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    {{#each members}}
+                      <tr class="group hover:bg-gray-50 transition-all duration-300">
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-semibold group-hover:text-blue-600">{{this.memberId}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{this.firstName}} {{this.lastName}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{this.email}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-3 py-1 text-xs rounded-full font-bold {{#if (eq this.status 'active')}}bg-blue-100 text-blue-700{{else if (eq this.status 'pending')}}bg-yellow-100 text-yellow-700{{else}}bg-red-100 text-red-700{{/if}}">
+                            {{this.status}}
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <a href="/admin/members/{{this.memberId}}" class="group inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold hover:underline text-sm transition-colors">
+                              <i data-lucide="eye" class="w-4 h-4 group-hover:animate-pulse"></i>
+                              <span>View</span>
+                          </a>
+                        </td>
+                      </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Custom Animations -->
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #fbbf24, 0 0 12px #fbbf24;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        .sparkle:nth-child(odd) { animation-duration: 1.5s; }
+        .sparkle:nth-child(even) { animation-duration: 2.5s; }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+    </style>
+</body>
+</html>

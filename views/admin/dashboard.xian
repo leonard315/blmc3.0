@@ -1,0 +1,327 @@
+{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+{{> sidebar}}
+
+<div class="flex-1 ml-64 min-h-screen flex flex-col" data-main>
+
+  <!-- Top Bar -->
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">Admin Dashboard</h1>
+      <p class="text-xs text-gray-400 mt-0.5">Overview of BLMC operations and key metrics</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="live-clock" class="text-xs text-gray-400 font-mono"></span>
+      <a href="/admin/members" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-red-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:shadow-md transition-all">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Member
+      </a>
+    </div>
+  </div>
+
+  <div class="p-8 flex-1">
+
+    <!-- ── STAT CARDS ── -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-8">
+
+      <!-- Total Members -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow">
+            <i data-lucide="users" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">All</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{stats.totalMembers}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Total Members</p>
+      </div>
+
+      <!-- Active Members -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow">
+            <i data-lucide="user-check" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{stats.activeMembers}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Active Members</p>
+      </div>
+
+      <!-- Pending Applicants -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow">
+            <i data-lucide="clipboard-list" class="w-5 h-5 text-white"></i>
+          </div>
+          <a href="/admin/inquiries" class="text-xs font-semibold text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded-full hover:bg-yellow-100 transition-colors">View</a>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{stats.pendingApplicants}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Applicants</p>
+      </div>
+
+      <!-- Supply Requests -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow">
+            <i data-lucide="shopping-cart" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">{{stats.pendingRequests}} pending</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{stats.requests}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Supply Requests</p>
+      </div>
+
+      <!-- Daily Sales -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow">
+            <i data-lucide="sun" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full">Today</span>
+        </div>
+        <p class="text-xl font-extrabold text-gray-900">{{formatCurrency stats.dailySales}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Daily Sales</p>
+      </div>
+
+      <!-- Monthly Sales -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow">
+            <i data-lucide="calendar" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full">Month</span>
+        </div>
+        <p class="text-xl font-extrabold text-gray-900">{{formatCurrency stats.monthlySales}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Monthly Sales</p>
+      </div>
+
+      <!-- Annual Sales -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow col-span-1">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-400 to-blue-500 flex items-center justify-center shadow">
+            <i data-lucide="trending-up" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-gray-500 bg-gray-50 px-2 py-0.5 rounded-full">Year</span>
+        </div>
+        <p class="text-xl font-extrabold text-gray-900">{{formatCurrency stats.annualSales}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Annual Sales</p>
+      </div>
+
+    </div>
+
+    <!-- ── CHARTS ROW ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+      <!-- Monthly Sales Line Chart -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="text-base font-bold text-gray-900">Monthly Sales</h3>
+            <p class="text-xs text-gray-400">Revenue per month — {{stats.currentYear}}</p>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+            <i data-lucide="line-chart" class="w-4 h-4 text-blue-600"></i>
+          </div>
+        </div>
+        <div style="height:220px;position:relative;">
+          <canvas id="salesLineChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Requests Bar Chart -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="text-base font-bold text-gray-900">Supply Requests</h3>
+            <p class="text-xs text-gray-400">Requests per month — {{stats.currentYear}}</p>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-red-500"></i>
+          </div>
+        </div>
+        <div style="height:220px;position:relative;">
+          <canvas id="requestsBarChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── BOTTOM ROW ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Recent Transactions -->
+      <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-base font-bold text-gray-900">Recent Transactions</h3>
+          <a href="/admin/financial-reports" class="text-xs text-blue-600 font-semibold hover:underline">View all</a>
+        </div>
+        {{#if recentTransactions.length}}
+        <div class="space-y-2">
+          {{#each recentTransactions}}
+          <div class="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="arrow-right-left" class="w-4 h-4 text-blue-500"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-800 capitalize">{{this.transactionType}}</p>
+                <p class="text-xs text-gray-400">{{this.memberId}} · {{formatDate this.transactionDate}}</p>
+              </div>
+            </div>
+            <span class="text-sm font-bold text-gray-900">{{formatCurrency this.amount}}</span>
+          </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <div class="flex flex-col items-center justify-center py-10 text-gray-300">
+          <i data-lucide="inbox" class="w-10 h-10 mb-2"></i>
+          <p class="text-sm font-semibold">No recent transactions</p>
+        </div>
+        {{/if}}
+      </div>
+
+      <!-- Right Column -->
+      <div class="flex flex-col gap-6">
+
+        <!-- Low Stock Alerts -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-gray-900">Low Stock Alerts</h3>
+            <a href="/admin/inventory" class="text-xs text-blue-600 font-semibold hover:underline">Inventory</a>
+          </div>
+          {{#if lowStockItems.length}}
+          <div class="space-y-2">
+            {{#each lowStockItems}}
+            <div class="flex items-center gap-3 bg-red-50 rounded-xl px-3 py-2.5">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 flex-shrink-0"></i>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-red-700 truncate">{{this.name}}</p>
+                <p class="text-xs text-red-400">Stock: {{this.currentStock}} / Reorder: {{this.reorderPoint}}</p>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="flex items-center gap-2 bg-green-50 rounded-xl px-4 py-3">
+            <i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i>
+            <p class="text-sm font-semibold text-green-700">All items in stock</p>
+          </div>
+          {{/if}}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h3 class="text-base font-bold text-gray-900 mb-4">Quick Actions</h3>
+          <div class="space-y-2">
+            <a href="/admin/inquiries" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-blue-50 transition-colors group">
+              <div class="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center">
+                <i data-lucide="clipboard-list" class="w-4 h-4 text-yellow-500"></i>
+              </div>
+              <span class="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Review Applicants</span>
+              {{#if stats.pendingApplicants}}
+              <span class="ml-auto text-xs font-bold text-white bg-red-500 rounded-full px-2 py-0.5">{{stats.pendingApplicants}}</span>
+              {{/if}}
+            </a>
+            <a href="/admin/loans" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-blue-50 transition-colors group">
+              <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <i data-lucide="credit-card" class="w-4 h-4 text-blue-500"></i>
+              </div>
+              <span class="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Manage Loans</span>
+            </a>
+            <a href="/admin/programs" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-blue-50 transition-colors group">
+              <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                <i data-lucide="book-open" class="w-4 h-4 text-purple-500"></i>
+              </div>
+              <span class="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Programs</span>
+            </a>
+            <a href="/admin/financial-reports" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-blue-50 transition-colors group">
+              <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                <i data-lucide="file-bar-chart" class="w-4 h-4 text-green-500"></i>
+              </div>
+              <span class="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Financial Reports</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+lucide.createIcons();
+
+// Live clock
+(function tick(){
+  const el = document.getElementById('live-clock');
+  if(el) el.textContent = new Date().toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'});
+  setTimeout(tick, 1000);
+})();
+
+// Charts
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const salesData    = {{{chartData.monthlySales}}};
+const requestsData = {{{chartData.monthlyRequests}}};
+
+new Chart(document.getElementById('salesLineChart'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [{
+      label: 'Sales (₱)',
+      data: salesData,
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59,130,246,0.08)',
+      fill: true,
+      tension: 0.4,
+      borderWidth: 2.5,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      pointBackgroundColor: '#3b82f6',
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => '₱' + ctx.parsed.y.toLocaleString('en-PH') }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 11 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#9ca3af', font: { size: 11 }, callback: v => '₱' + v.toLocaleString('en-PH') }, beginAtZero: true }
+    }
+  }
+});
+
+new Chart(document.getElementById('requestsBarChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      label: 'Requests',
+      data: requestsData,
+      backgroundColor: 'rgba(239,68,68,0.75)',
+      borderColor: '#ef4444',
+      borderWidth: 0,
+      borderRadius: 6,
+      hoverBackgroundColor: '#ef4444'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 11 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#9ca3af', font: { size: 11 }, stepSize: 1 }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>

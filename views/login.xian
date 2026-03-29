@@ -1,0 +1,115 @@
+{{> head }}
+<body class="bg-gray-50 min-h-screen antialiased flex items-center justify-center">
+  <!-- Subtle Sparkle Background (theme color adjusted to blue) -->
+  <div class="absolute inset-0 opacity-20">
+    <div class="absolute inset-0 sparkle-container">
+      <div class="sparkle"></div>
+      <div class="sparkle" style="left: 20%; top: 30%; animation-delay: 0.5s;"></div>
+      <div class="sparkle" style="left: 60%; top: 20%; animation-delay: 1s;"></div>
+      <div class="sparkle" style="left: 80%; top: 70%; animation-delay: 1.5s;"></div>
+      <div class="sparkle" style="left: 40%; top: 80%; animation-delay: 2s;"></div>
+      <div class="sparkle" style="left: 10%; top: 50%; animation-delay: 2.5s;"></div>
+      <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 3s;"></div>
+      <div class="sparkle" style="left: 30%; top: 10%; animation-delay: 3.5s;"></div>
+    </div>
+  </div>
+  <div class="bg-white p-8 rounded-3xl shadow-lg w-full max-w-md border border-blue-200 relative z-10 animate-fade-in">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-12 h-12 rounded-md overflow-hidden bg-red-50 border-2 border-blue-300 flex items-center justify-center">
+        <img src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+        <i data-lucide="cow" class="w-6 h-6 text-red-500"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-extrabold text-gray-900">Admin Login</h2>
+        <p class="text-sm font-semibold text-red-500 -mt-1">Secure Access to Management System</p>
+      </div>
+    </div>
+       
+        {{#if error_msg}}
+          <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl mb-6">
+            {{error_msg}}
+          </div>
+        {{/if}}
+        <form method="POST" action="/login">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">Email</label>
+            <div class="relative">
+                <i data-lucide="mail" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-400"></i>
+                <input class="bg-white border border-gray-300 rounded-lg w-full py-3 px-10 text-gray-900 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                       type="email" id="email" name="email" placeholder="you@domain.com" required>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">Password</label>
+            <div class="relative">
+                <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-400"></i>
+                <input class="bg-white border border-gray-300 rounded-lg w-full py-3 px-10 pr-12 text-gray-900 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                       type="password" id="password" name="password" placeholder="Enter your password" required>
+                <button type="button" onclick="togglePassword('password', 'eye-icon-password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors">
+                  <i data-lucide="eye" id="eye-icon-password" class="w-5 h-5"></i>
+                </button>
+            </div>
+          </div>
+
+          <button class="bg-gradient-to-r from-red-500 to-blue-600 text-white font-bold py-3 px-6 rounded-lg w-full shadow hover:shadow-md transition-all duration-200 flex items-center justify-center space-x-2" type="submit">
+            <i data-lucide="log-in" class="w-5 h-5"></i>
+            <span>Login</span>
+          </button>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-700 flex items-center justify-center gap-4">
+          <a href="/" class="inline-flex items-center gap-2 bg-white text-blue-900 px-3 py-2 rounded-full font-medium text-sm border-2 border-red-200">Homepage</a>
+          <span class="text-gray-300">|</span>
+          <a href="/member/login" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-blue-600 text-white px-3 py-2 rounded-full font-medium text-sm">Member Login</a>
+        </p>
+    </div>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Initialize Lucide Icons -->
+    <script>
+      lucide.createIcons();
+    </script>
+    <!-- Custom Animations -->
+    <style>
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes sparkle {
+        0%, 100% { opacity: 0; transform: scale(0.5); }
+        50% { opacity: 1; transform: scale(1.2); }
+      }
+      .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #3b82f6;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #3b82f6, 0 0 16px #3b82f6, 0 0 24px #3b82f6;
+        animation: sparkle 2s ease-in-out infinite;
+      }
+      .sparkle:nth-child(odd) { animation-duration: 1.5s; }
+      .sparkle:nth-child(even) { animation-duration: 2.5s; }
+      .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+    </style>
+    
+    <script>
+      // Toggle password visibility
+      function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.setAttribute('data-lucide', 'eye-off');
+        } else {
+          input.type = 'password';
+          icon.setAttribute('data-lucide', 'eye');
+        }
+        
+        // Re-create Lucide icons
+        if (window.lucide) lucide.createIcons();
+      }
+    </script>
+</body>
+</html>

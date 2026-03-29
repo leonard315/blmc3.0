@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head }}
+    <title>Bansud Livestock Multi-Purpose Cooperative</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        @keyframes fade-in-down { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fade-in-up   { from { opacity:0; transform:translateY(30px);  } to { opacity:1; transform:translateY(0); } }
+        @keyframes fade-out     { from { opacity:1; } to { opacity:0; } }
+        @keyframes pulse-slow   { 0%,100% { opacity:1; } 50% { opacity:.5; } }
+        @keyframes sparkle      { 0%,100% { opacity:0; transform:scale(.5); } 50% { opacity:1; transform:scale(1.2); } }
+        .animate-fade-in-down  { animation: fade-in-down .8s ease-out forwards; }
+        .animate-fade-in-up    { animation: fade-in-up  .8s ease-out forwards; }
+        .animate-fade-in       { animation: fade-in-down 1s ease-out; }
+        .animate-pulse-slow    { animation: pulse-slow 3s cubic-bezier(.4,0,.6,1) infinite; }
+        .animation-delay-200   { animation-delay:.2s; }
+        .animation-delay-400   { animation-delay:.4s; }
+        .animation-delay-600   { animation-delay:.6s; }
+        .sparkle { position:absolute; width:4px; height:4px; background:#3b82f6; border-radius:50%;
+                   box-shadow:0 0 8px #3b82f6,0 0 16px #3b82f6; animation:sparkle 2s ease-in-out infinite; }
+        .sparkle:nth-child(odd)  { animation-duration:1.5s; }
+        .sparkle:nth-child(even) { animation-duration:2.5s; }
+        /* underline accent bar on service cards */
+        .service-bar { height:3px; width:3rem; border-radius:9999px; transition:width .5s; }
+        .group:hover .service-bar { width:100%; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased">
+
+<!-- ═══════════════════════════════════════════════════════ NAVBAR -->
+<nav class="bg-white/95 backdrop-blur-md text-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl overflow-hidden border-2 border-blue-100 shadow-sm flex-shrink-0">
+                <img src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-full h-full object-cover" />
+            </div>
+            <div class="leading-tight">
+                <p class="text-base font-extrabold text-gray-900 tracking-tight">Bansud Livestock</p>
+                <p class="text-xs font-semibold text-red-500 -mt-0.5">Multi-Purpose Cooperative</p>
+            </div>
+        </div>
+        <!-- Links + Buttons -->
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-600">
+                <a href="#services" class="hover:text-blue-600 transition-colors">Services</a>
+                <a href="#how-to-join" class="hover:text-blue-600 transition-colors">How to Join</a>
+                <a href="#about" class="hover:text-blue-600 transition-colors">About</a>
+            </div>
+            <div class="flex items-center gap-2 relative">
+                <button id="loginToggle" onclick="document.getElementById('loginMenu').classList.toggle('hidden')"
+                  class="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-blue-600 text-white text-sm font-bold px-5 py-2 rounded-full shadow hover:shadow-md transition-all">
+                  <i data-lucide="log-in" class="w-4 h-4"></i> Login
+                  <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                </button>
+                <div id="loginMenu" class="hidden absolute right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 w-44">
+                  <a href="/login" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                    <i data-lucide="shield" class="w-4 h-4 text-blue-500"></i> Admin Login
+                  </a>
+                  <a href="/member/login" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors border-t border-gray-50">
+                    <i data-lucide="user" class="w-4 h-4 text-red-500"></i> Member Login
+                  </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ HERO -->
+<section class="relative min-h-[88vh] flex items-center overflow-hidden">
+    <!-- Background image -->
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('/images/homepage-bg.jpg');"></div>
+        <!-- Gradient overlay: left opaque, right transparent -->
+        <div class="absolute inset-0" style="background:linear-gradient(100deg,rgba(249,250,251,.97) 0%,rgba(249,250,251,.88) 30%,rgba(249,250,251,.5) 55%,rgba(249,250,251,.05) 80%);"></div>
+    </div>
+    <!-- Sparkles -->
+    <div class="absolute inset-0 pointer-events-none opacity-30">
+        <div class="sparkle" style="left:5%;top:20%;"></div>
+        <div class="sparkle" style="left:15%;top:70%;animation-delay:.6s;"></div>
+        <div class="sparkle" style="left:25%;top:40%;animation-delay:1.2s;"></div>
+    </div>
+
+    <div class="container mx-auto px-6 relative z-10 py-24">
+        <div class="max-w-xl">
+            <!-- Badge -->
+            <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6 animate-fade-in">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> CDA Registered Cooperative
+            </span>
+            <!-- Headline -->
+            <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+                <span class="text-gray-900 animate-fade-in-down block">Bansud</span>
+                <span class="text-red-500 animate-fade-in-down animation-delay-200 block">Livestock</span>
+                <span class="text-blue-600 animate-fade-in-down animation-delay-400 block">Cooperative</span>
+            </h1>
+            <p class="text-lg text-gray-600 mb-8 animate-fade-in-up animation-delay-600 max-w-md">
+                Empowering livestock raisers and farmers in Bansud, Oriental Mindoro through shared resources, financial services, and community support.
+            </p>
+            <!-- CTAs -->
+            <div class="flex flex-wrap gap-3 animate-fade-in-up animation-delay-600">
+                <button id="open-inquire" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-blue-600 text-white px-7 py-3.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all text-sm">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> Become a Member
+                </button>
+                <a href="#services" class="inline-flex items-center gap-2 bg-white text-gray-800 border border-gray-200 px-7 py-3.5 rounded-full font-semibold shadow hover:shadow-md transition-all text-sm">
+                    <i data-lucide="arrow-down" class="w-4 h-4"></i> Our Services
+                </a>
+            </div>
+            <!-- Stats row -->
+            <div class="flex flex-wrap gap-6 mt-10 animate-fade-in-up animation-delay-600">
+                <div class="text-center">
+                    <p class="text-2xl font-extrabold text-blue-600">CDA</p>
+                    <p class="text-xs text-gray-500 font-semibold">Registered</p>
+                </div>
+                <div class="w-px bg-gray-200"></div>
+                <div class="text-center">
+                    <p class="text-2xl font-extrabold text-red-500">100%</p>
+                    <p class="text-xs text-gray-500 font-semibold">Member-Owned</p>
+                </div>
+                <div class="w-px bg-gray-200"></div>
+                <div class="text-center">
+                    <p class="text-2xl font-extrabold text-gray-800">6+</p>
+                    <p class="text-xs text-gray-500 font-semibold">Services</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SERVICES -->
+<section id="services" class="bg-white py-20">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-14">
+            <span class="inline-block bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">Our Services</span>
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-3">What BLMC Offers</h2>
+            <p class="text-gray-500 max-w-xl mx-auto text-sm leading-relaxed">A range of services designed to support members' livelihoods and financial growth.</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="group bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm">
+                <div class="w-13 h-13 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-5 shadow">
+                    <i data-lucide="credit-card" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Loan Services</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Affordable loans for livestock production, farm inputs, and livelihood improvement with low interest rates.</p>
+                <div class="service-bar mt-5 bg-gradient-to-r from-blue-500 to-red-500"></div>
+            </div>
+            <!-- Card 2 -->
+            <div class="group bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mb-5 shadow">
+                    <i data-lucide="package" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Supply & Feeds Program</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Quality livestock feeds, veterinary supplies, and farm inputs at cooperative prices through our supply reserve program.</p>
+                <div class="service-bar mt-5 bg-gradient-to-r from-red-500 to-blue-500"></div>
+            </div>
+            <!-- Card 3 -->
+            <div class="group bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-5 shadow">
+                    <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Savings & Share Capital</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Build your financial future through share capital contributions with annual patronage refunds and dividends.</p>
+                <div class="service-bar mt-5 bg-gradient-to-r from-green-500 to-blue-500"></div>
+            </div>
+            <!-- Card 4 -->
+            <div class="group bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center mb-5 shadow">
+                    <i data-lucide="book-open" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Training & Seminars</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Regular programs on livestock management, biosecurity, and cooperative governance to empower members.</p>
+                <div class="service-bar mt-5 bg-gradient-to-r from-yellow-500 to-blue-500"></div>
+            </div>
+            <!-- Card 5 -->
+            <div class="group bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-5 shadow">
+                    <i data-lucide="activity" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Production Monitoring</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Track daily egg yield, feed intake, mortality rates, and harvest data through our digital logging system.</p>
+                <div class="service-bar mt-5 bg-gradient-to-r from-purple-500 to-blue-500"></div>
+            </div>
+            <!-- Card 6 -->
+            <div class="group bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-sm">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-red-500 flex items-center justify-center mb-5 shadow">
+                    <i data-lucide="users" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Membership Benefits</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Priority access to programs, financial assistance, and community support networks for all members.</p>
+                <div class="service-bar mt-5 bg-gradient-to-r from-blue-500 to-red-500"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ HOW TO JOIN -->
+<section id="how-to-join" class="bg-gradient-to-br from-blue-600 via-blue-700 to-red-500 py-20 text-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-14">
+            <span class="inline-block bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">Membership</span>
+            <h2 class="text-4xl font-extrabold mb-3">How to Become a Member</h2>
+            <p class="text-blue-100 max-w-lg mx-auto text-sm">Follow these four simple steps to join the Bansud Livestock Multi-Purpose Cooperative.</p>
+        </div>
+        <div class="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <div class="text-center group">
+                <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white/60 flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold group-hover:bg-white/30 transition-colors">1</div>
+                <h4 class="font-bold text-lg mb-2">Submit Application</h4>
+                <p class="text-blue-100 text-sm leading-relaxed">Fill out the membership inquiry form with your personal and farm information.</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white/60 flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold group-hover:bg-white/30 transition-colors">2</div>
+                <h4 class="font-bold text-lg mb-2">Attend Seminar</h4>
+                <p class="text-blue-100 text-sm leading-relaxed">Attend the required pre-membership seminar scheduled by the cooperative.</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white/60 flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold group-hover:bg-white/30 transition-colors">3</div>
+                <h4 class="font-bold text-lg mb-2">Submit Documents</h4>
+                <p class="text-blue-100 text-sm leading-relaxed">Submit required documents and pay the ₱200 membership fee and ₱10,000 share capital.</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 rounded-full bg-white/20 border-2 border-white/60 flex items-center justify-center mx-auto mb-4 text-2xl font-extrabold group-hover:bg-white/30 transition-colors">4</div>
+                <h4 class="font-bold text-lg mb-2">Get Approved</h4>
+                <p class="text-blue-100 text-sm leading-relaxed">Receive your member ID and start enjoying all cooperative benefits.</p>
+            </div>
+        </div>
+        <div class="text-center mt-12">
+            <button id="open-inquire-hero" class="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transition-all text-base">
+                <i data-lucide="user-plus" class="w-5 h-5"></i> Apply for Membership Now
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ ABOUT -->
+<section id="about" class="bg-gray-50 py-20">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-14">
+            <span class="inline-block bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">About Us</span>
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-3">About BLMC</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto text-sm leading-relaxed">Bansud Livestock Multi-Purpose Cooperative is a CDA-registered cooperative dedicated to empowering livestock raisers and farmers in Bansud, Oriental Mindoro through collective action and shared resources.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow">
+                    <i data-lucide="target" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-2">Our Mission</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">To provide accessible financial services, quality inputs, and capacity-building programs that improve the livelihoods of our members and their families.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mx-auto mb-4 shadow">
+                    <i data-lucide="eye" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-2">Our Vision</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">A self-reliant and progressive cooperative community where every member thrives through unity, integrity, and sustainable livestock farming practices.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-4 shadow">
+                    <i data-lucide="heart" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-2">Our Values</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Integrity, solidarity, transparency, and service — the core values that guide every decision and action of the cooperative.</p>
+            </div>
+        </div>
+        <!-- Registration info card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-7 max-w-2xl mx-auto text-center">
+            <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Registered with the Cooperative Development Authority</p>
+            <p class="text-gray-700 font-semibold text-sm">CDA Reg. No. 9520-04000617 &nbsp;·&nbsp; CIN-0107040018 &nbsp;·&nbsp; TIN No. 004-972-048-000</p>
+            <p class="text-gray-400 text-sm mt-1">Poblacion, Bansud, Oriental Mindoro</p>
+            <div class="mt-5">
+                <button id="open-contact" type="button" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-blue-600 text-white px-6 py-2.5 rounded-full font-semibold text-sm shadow hover:shadow-md transition-all">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Contact Us
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{> footer }}
+
+<!-- ═══════════════════════════════════════════════════════ INQUIRY MODAL -->
+<div id="inquire-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[92vh]">
+        <!-- Modal header -->
+        <div class="px-5 py-4 bg-gradient-to-r from-blue-600 to-red-500 text-white flex justify-between items-center flex-shrink-0 rounded-t-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                    <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Membership Inquiry Form</h4>
+                    <p class="text-xs text-blue-100">Bansud Livestock Multi-Purpose Cooperative</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" id="save-pdf" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">Save PDF</button>
+                <button type="submit" form="inquire-form" class="bg-white text-blue-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-50 transition-colors">Submit</button>
+                <button id="close-inquire" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors ml-1">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Form body -->
+        <form id="inquire-form" class="p-6 overflow-auto flex-1" enctype="multipart/form-data">
+            <!-- Cooperative header -->
+            <div class="text-center mb-6 pb-4 border-b border-gray-100">
+                <img id="inquire-logo" src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-14 h-14 rounded-xl mx-auto mb-2 shadow" />
+                <h3 class="font-bold text-gray-900">Bansud Livestock Multi-Purpose Cooperative</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Poblacion, Bansud, Oriental Mindoro &nbsp;·&nbsp; CDA Reg. No. 9520-04000617</p>
+            </div>
+
+            <!-- Account Info -->
+            <h5 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">1</span> Account Information</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Email Address <span class="text-red-500">*</span></label><input type="email" name="email" placeholder="you@email.com" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" required /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Password <span class="text-red-500">*</span></label><input type="password" name="password" placeholder="Create a password" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" required /></div>
+            </div>
+
+            <!-- Other Info -->
+            <h5 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">2</span> Other Information</h5>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">2x2 ID Picture</label><input type="file" name="picture" accept="image/*" class="w-full text-sm text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Membership Type</label>
+                    <div class="flex gap-4 mt-2">
+                        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="radio" name="memberType" value="Regular" class="accent-blue-600" /> Regular</label>
+                        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="radio" name="memberType" value="Associative" class="accent-blue-600" /> Associative</label>
+                    </div>
+                </div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Code Number</label><input type="text" name="codeNumber" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+            </div>
+
+            <!-- Personal Info -->
+            <h5 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">3</span> Personal Information</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Full Name <span class="text-red-500">*</span></label><input type="text" name="fullName" placeholder="e.g. Juan Dela Cruz" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" required /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Home Address</label><input type="text" name="address" placeholder="Barangay, Municipality, Province" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Date of Birth</label><input type="date" name="birthday" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Age</label><input type="number" name="age" placeholder="e.g. 35" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Gender</label>
+                    <select name="gender" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                        <option value="">-- Select --</option><option>Male</option><option>Female</option><option>Prefer not to say</option>
+                    </select>
+                </div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Civil Status</label>
+                    <select name="civilStatus" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                        <option value="">-- Select --</option><option>Single</option><option>Married</option><option>Widowed</option><option>Separated</option><option>Annulled</option>
+                    </select>
+                </div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Religion</label>
+                    <select name="religion" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                        <option value="">-- Select --</option><option>Roman Catholic</option><option>Iglesia ni Cristo</option><option>Born Again Christian</option><option>Islam</option><option>Seventh-day Adventist</option><option>Other</option>
+                    </select>
+                </div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Contact Number</label><input type="text" name="contactNo" placeholder="09XX-XXX-XXXX" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Promised Share Capital (₱)</label><input type="text" name="promisedCapital" placeholder="e.g. 10000" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Paid Share Capital (₱)</label><input type="text" name="paidCapital" placeholder="e.g. 5000" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">No. of Dependents</label><input type="number" name="dependents" placeholder="e.g. 3" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Occupation / Source of Income</label><input type="text" name="occupation" placeholder="e.g. Farmer, Livestock Raiser" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">Annual Income (₱)</label><input type="text" name="annualIncome" placeholder="e.g. 120000" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+                <div class="md:col-span-2"><label class="block text-xs font-semibold text-gray-600 mb-1">Other Cooperatives You Belong To</label><textarea name="otherCooperatives" rows="2" placeholder="List other cooperatives (if any)" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none resize-none"></textarea></div>
+            </div>
+
+            <!-- Family Info -->
+            <h5 class="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">4</span> Family Information</h5>
+            <p class="text-xs text-gray-400 mb-2">Name | Relationship | Age | Education | Occupation</p>
+            <div id="family-rows" class="space-y-2 mb-2">
+                <div class="grid grid-cols-5 gap-2">
+                    <input name="family_name[]" placeholder="Name" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="family_relation[]" placeholder="Relationship" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="family_age[]" placeholder="Age" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="family_education[]" placeholder="Education" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="family_occupation[]" placeholder="Occupation" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                </div>
+            </div>
+            <button type="button" id="add-family" class="text-xs text-blue-600 font-semibold hover:underline mb-5">+ Add Family Member</button>
+
+            <!-- Beneficiary -->
+            <h5 class="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">5</span> Beneficiary / Heir</h5>
+            <div id="beneficiary-rows" class="space-y-2 mb-2">
+                <div class="grid grid-cols-3 gap-2">
+                    <input name="ben_name[]" placeholder="Name" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="ben_relation[]" placeholder="Relationship" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="ben_age[]" placeholder="Age" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                </div>
+            </div>
+            <button type="button" id="add-ben" class="text-xs text-blue-600 font-semibold hover:underline mb-5">+ Add Beneficiary</button>
+
+            <!-- Land Info -->
+            <h5 class="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">6</span> Land Information</h5>
+            <div id="land-rows" class="space-y-2 mb-2">
+                <div class="grid grid-cols-3 gap-2">
+                    <input name="land_crop[]" placeholder="Type of Crop/Plant" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="land_area[]" placeholder="Area (hectares)" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                    <input name="land_tenure[]" placeholder="Owned / Leased / Shared" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs focus:border-blue-500 outline-none" />
+                </div>
+            </div>
+            <button type="button" id="add-land" class="text-xs text-blue-600 font-semibold hover:underline mb-5">+ Add Land Row</button>
+
+            <!-- Livestock -->
+            <h5 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">7</span> Number of Livestock</h5>
+            <div class="grid grid-cols-2 gap-4 mb-5">
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <p class="text-xs font-bold text-gray-700 mb-2">Pigs</p>
+                    <input name="pig_sow" placeholder="Sow (Female)" class="border border-gray-200 px-2 py-1.5 w-full rounded-lg text-xs mb-1.5 focus:border-blue-500 outline-none" />
+                    <input name="pig_breeder" placeholder="Boar (Male)" class="border border-gray-200 px-2 py-1.5 w-full rounded-lg text-xs mb-1.5 focus:border-blue-500 outline-none" />
+                    <input name="pig_grower" placeholder="Grower" class="border border-gray-200 px-2 py-1.5 w-full rounded-lg text-xs focus:border-blue-500 outline-none" />
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <p class="text-xs font-bold text-gray-700 mb-2">Chickens</p>
+                    <input name="chicken_layer" placeholder="Layer (Egg-producing)" class="border border-gray-200 px-2 py-1.5 w-full rounded-lg text-xs mb-1.5 focus:border-blue-500 outline-none" />
+                    <input name="chicken_broiler" placeholder="Broiler (Meat)" class="border border-gray-200 px-2 py-1.5 w-full rounded-lg text-xs focus:border-blue-500 outline-none" />
+                </div>
+            </div>
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Type of Feeds Used</label>
+                <input name="feeds" class="border border-gray-200 w-full px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" />
+            </div>
+
+            <!-- Goals -->
+            <h5 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">8</span> Goals & Contribution</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">What is your goal in joining the cooperative?</label><textarea name="goal" rows="3" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none resize-none"></textarea></div>
+                <div><label class="block text-xs font-semibold text-gray-600 mb-1">How can you contribute to the cooperative's growth?</label><textarea name="contributionHelp" rows="3" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none resize-none"></textarea></div>
+            </div>
+            <div><label class="block text-xs font-semibold text-gray-600 mb-1">Date Submitted</label><input type="date" name="submittedAt" class="border border-gray-200 px-3 py-2 rounded-lg text-sm focus:border-blue-500 outline-none" /></div>
+        </form>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ CONTACT MODAL -->
+<div id="contact-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+        <div class="px-5 py-4 bg-gradient-to-r from-red-500 to-blue-600 text-white flex justify-between items-center">
+            <h4 class="font-bold text-sm">Contact Us</h4>
+            <button id="close-contact" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-600 text-sm mb-4">For support or questions, reach out to our developer team:</p>
+            <p class="text-gray-900 font-semibold text-sm">Ken (Lead): <a href="mailto:kenntolentino05@gmail.com" class="text-blue-600 hover:underline">kenntolentino05@gmail.com</a></p>
+            <p class="text-gray-900 font-semibold text-sm mt-2">Kate: <a href="mailto:kateagoncillo71@gmail.com" class="text-blue-600 hover:underline">kateagoncillo71@gmail.com</a></p>
+            <div class="mt-5 text-right">
+                <button id="close-contact-2" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ------------------------------------------------------- AI CHAT -->
+<button id="chat-head" aria-label="Open AI Assistant" class="fixed right-6 bottom-6 z-[9999] w-14 h-14 rounded-full bg-gradient-to-br from-red-500 to-blue-600 text-white shadow-2xl flex items-center justify-center hover:scale-110 transition-all duration-300">
+    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-red-400 to-blue-500 animate-ping opacity-60"></div>
+    <i data-lucide="bot" class="w-7 h-7 relative z-10"></i>
+</button>
+
+<div id="chat-panel" class="hidden fixed right-6 bottom-24 z-[9998] w-88 w-80 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl border border-blue-100 flex-col overflow-hidden">
+    <div class="bg-gradient-to-r from-red-500 to-blue-600 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="font-bold text-sm">BLMC AI Assistant</p>
+                <p class="text-xs text-blue-100">Always here to help</p>
+            </div>
+        </div>
+        <button onclick="document.getElementById('chat-panel').classList.add('hidden');document.getElementById('chat-panel').classList.remove('flex');" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+    </div>
+    <div id="chat-body" class="p-4 h-64 overflow-auto bg-gray-50">
+        <div id="chat-messages" class="space-y-3"></div>
+    </div>
+    <div class="px-4 py-3 border-t border-gray-100 bg-white">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Quick Questions</p>
+        <div id="chat-questions" class="space-y-1.5 max-h-40 overflow-auto"></div>
+    </div>
+    <div class="px-4 py-2 bg-gray-50 border-t border-gray-100 text-center">
+        <p class="text-xs text-gray-400">Powered by BLMC AI &bull; v1.0</p>
+    </div>
+</div>
+<!-- ------------------------------------------------------- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+lucide.createIcons();
+
+// Close login dropdown on outside click
+document.addEventListener('click', e => {
+  const menu = document.getElementById('loginMenu');
+  const toggle = document.getElementById('loginToggle');
+  if (menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.add('hidden');
+  }
+});
+
+(function(){
+    // -- Modal helpers ----------------------------------------------
+    const inquireModal  = document.getElementById('inquire-modal');
+    const contactModal  = document.getElementById('contact-modal');
+    const form          = document.getElementById('inquire-form');
+
+    function openModal(m){ m.classList.remove('hidden'); m.classList.add('flex'); }
+    function closeModal(m){ m.classList.add('hidden'); m.classList.remove('flex'); }
+
+    // Open inquiry from hero / how-to-join buttons
+    ['open-inquire','open-inquire-hero'].forEach(id=>{
+        const btn = document.getElementById(id);
+        if(btn) btn.addEventListener('click', ()=>{ form.reset(); openModal(inquireModal); });
+    });
+    document.getElementById('close-inquire').addEventListener('click', ()=> closeModal(inquireModal));
+    inquireModal.addEventListener('click', e=>{ if(e.target===inquireModal) closeModal(inquireModal); });
+
+    // Contact modal
+    const openContact = document.getElementById('open-contact');
+    if(openContact) openContact.addEventListener('click', ()=> openModal(contactModal));
+    document.getElementById('close-contact').addEventListener('click',  ()=> closeModal(contactModal));
+    document.getElementById('close-contact-2').addEventListener('click',()=> closeModal(contactModal));
+    contactModal.addEventListener('click', e=>{ if(e.target===contactModal) closeModal(contactModal); });
+
+    // -- Dynamic rows -----------------------------------------------
+    document.getElementById('add-family').addEventListener('click', ()=>{
+        const d = document.createElement('div'); d.className='grid grid-cols-5 gap-2';
+        d.innerHTML='<input name="family_name[]" placeholder="Name" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="family_relation[]" placeholder="Relationship" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="family_age[]" placeholder="Age" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="family_education[]" placeholder="Education" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="family_occupation[]" placeholder="Occupation" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>';
+        document.getElementById('family-rows').appendChild(d);
+    });
+    document.getElementById('add-ben').addEventListener('click', ()=>{
+        const d = document.createElement('div'); d.className='grid grid-cols-3 gap-2';
+        d.innerHTML='<input name="ben_name[]" placeholder="Name" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="ben_relation[]" placeholder="Relationship" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="ben_age[]" placeholder="Age" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>';
+        document.getElementById('beneficiary-rows').appendChild(d);
+    });
+    document.getElementById('add-land').addEventListener('click', ()=>{
+        const d = document.createElement('div'); d.className='grid grid-cols-3 gap-2';
+        d.innerHTML='<input name="land_crop[]" placeholder="Type of Crop/Plant" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="land_area[]" placeholder="Area (hectares)" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>'+
+            '<input name="land_tenure[]" placeholder="Owned / Leased / Shared" class="border border-gray-200 px-2 py-1.5 rounded-lg text-xs outline-none focus:border-blue-500"/>';
+        document.getElementById('land-rows').appendChild(d);
+    });
+
+    // -- Save as PDF ------------------------------------------------
+    document.getElementById('save-pdf').addEventListener('click', async ()=>{
+        try{
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText='background:#fff;padding:12mm;box-sizing:border-box;width:210mm;min-height:297mm;position:fixed;left:-9999px;top:-9999px;';
+            const clone = form.cloneNode(true);
+            const fd = new FormData(form);
+            clone.querySelectorAll('input,textarea,select').forEach(el=>{
+                if(!el.name) return;
+                if(el.type==='file'){ el.parentNode&&el.parentNode.removeChild(el); return; }
+                if(el.tagName.toLowerCase()==='textarea') el.textContent=fd.get(el.name)||'';
+                else el.value=fd.get(el.name)||'';
+            });
+            const hdr=document.createElement('div');
+            hdr.style.cssText='display:flex;align-items:center;gap:12px;margin-bottom:12px;';
+            const logo=document.getElementById('inquire-logo');
+            if(logo){ const img=document.createElement('img'); img.src=logo.src; img.style.cssText='width:64px;height:64px;object-fit:cover;border-radius:6px;'; hdr.appendChild(img); }
+            const t=document.createElement('div');
+            t.innerHTML='<h2 style="margin:0;font-size:16px;color:#111827;">Bansud Livestock Multi-Purpose Cooperative</h2><p style="margin:4px 0 0;font-size:12px;color:#374151;">Membership Inquiry Form</p>';
+            hdr.appendChild(t); wrapper.appendChild(hdr); wrapper.appendChild(clone);
+            document.body.appendChild(wrapper);
+            const imgs=wrapper.querySelectorAll('img');
+            await Promise.all([...imgs].map(img=>new Promise(res=>{
+                if(img.complete) return res();
+                img.onload=img.onerror=res;
+            })));
+            await html2pdf().set({
+                margin:[10,10,10,10], filename:'BLMC_Membership_Inquiry.pdf',
+                image:{type:'jpeg',quality:.95},
+                html2canvas:{scale:2,useCORS:true,logging:false},
+                jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+            }).from(wrapper).save();
+            document.body.removeChild(wrapper);
+        }catch(err){ console.error('PDF error',err); alert('Could not generate PDF. Please try again.'); }
+    });
+
+    // -- Form submit ------------------------------------------------
+    form.addEventListener('submit', async e=>{
+        e.preventDefault();
+        const fd = new FormData(form);
+        const btn = form.querySelector('[type=submit]') || document.querySelector('[form=inquire-form]');
+        if(btn){ btn.disabled=true; btn.textContent='Submitting…'; }
+        try{
+            const res = await fetch('/api/inquiry', { method:'POST', body: fd });
+            const data = await res.json();
+            if(res.ok){
+                closeModal(inquireModal);
+                form.reset();
+                alert('Your application has been submitted! We will contact you soon.');
+            } else {
+                alert(data.message || 'Submission failed. Please try again.');
+            }
+        }catch(err){
+            console.error(err);
+            alert('Network error. Please check your connection and try again.');
+        }finally{
+            if(btn){ btn.disabled=false; btn.textContent='Submit'; }
+        }
+    });
+
+    // -- AI Chat ----------------------------------------------------
+    const chatHead  = document.getElementById('chat-head');
+    const chatPanel = document.getElementById('chat-panel');
+    const chatMsgs  = document.getElementById('chat-messages');
+    const chatQs    = document.getElementById('chat-questions');
+
+    const faqs = [
+        { q:'How do I become a member?', a:'Submit a membership inquiry form, attend the pre-membership seminar, submit required documents, and pay the ₱200 membership fee plus ₱10,000 share capital.' },
+        { q:'What is the share capital requirement?', a:'The minimum share capital is ₱10,000. You can pay in installments. Annual dividends are distributed based on your share capital.' },
+        { q:'What loans are available?', a:'BLMC offers production loans, livelihood loans, and emergency loans at low interest rates. Loan amounts depend on your share capital and credit standing.' },
+        { q:'What documents do I need?', a:'You need a valid government ID, 2x2 ID picture, barangay clearance, and proof of livelihood or farm ownership.' },
+        { q:'Where is BLMC located?', a:'We are located at Poblacion, Bansud, Oriental Mindoro. You can also reach us via email at the contact details on this page.' },
+        { q:'What are the membership benefits?', a:'Members enjoy access to loans, supply programs, training seminars, production monitoring, annual dividends, and community support networks.' },
+        { q:'How do I log in as a member?', a:'Click the "Member Login" button in the top navigation bar and enter your registered email and password.' },
+        { q:'What is the membership fee?', a:'The one-time membership fee is ₱200, plus the ₱10,000 minimum share capital contribution.' },
+    ];
+
+    function appendMessage(text, isUser=false){
+        const d = document.createElement('div');
+        d.className = isUser
+            ? 'flex justify-end'
+            : 'flex justify-start';
+        d.innerHTML = `<div class="max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${isUser ? 'bg-gradient-to-r from-red-500 to-blue-600 text-white rounded-br-none' : 'bg-white border border-gray-100 text-gray-700 shadow-sm rounded-bl-none'}">${text}</div>`;
+        chatMsgs.appendChild(d);
+        chatMsgs.parentElement.scrollTop = chatMsgs.parentElement.scrollHeight;
+    }
+
+    function buildQuestions(){
+        chatQs.innerHTML='';
+        faqs.forEach(faq=>{
+            const btn = document.createElement('button');
+            btn.type='button';
+            btn.className='w-full text-left text-xs text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors font-medium';
+            btn.textContent=faq.q;
+            btn.addEventListener('click',()=>{
+                appendMessage(faq.q, true);
+                setTimeout(()=> appendMessage(faq.a), 400);
+            });
+            chatQs.appendChild(btn);
+        });
+    }
+
+    chatHead.addEventListener('click',()=>{
+        const isHidden = chatPanel.classList.contains('hidden');
+        if(isHidden){
+            chatPanel.classList.remove('hidden');
+            chatPanel.classList.add('flex');
+            chatPanel.style.flexDirection='column';
+            if(chatMsgs.children.length===0){
+                appendMessage('Hi! I\'m the BLMC AI Assistant. How can I help you today? Click a question below or ask me anything about the cooperative.');
+                buildQuestions();
+            }
+            if(window.lucide) lucide.createIcons();
+        } else {
+            chatPanel.classList.add('hidden');
+            chatPanel.classList.remove('flex');
+        }
+    });
+
+    if(window.lucide) lucide.createIcons();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Financial Services - BLMC</title>
+</head>
+<body class="bg-gradient-to-br from-blue-950 to-blue-900 min-h-screen text-white">
+    {{> head}}
+    <div class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-extrabold mb-4">Financial Services</h1>
+        <p class="text-lg text-gray-200 mb-6">BLMC provides financial services to support members' needs, including:</p>
+        <ul class="list-disc list-inside text-gray-200 space-y-2">
+            <li>Share contributions and tracking</li>
+            <li>Member loans and repayment plans</li>
+            <li>Dividend and patronage refund management</li>
+            <li>Financial literacy and record keeping</li>
+        </ul>
+        <p class="mt-6 text-gray-300">For account-specific questions, members should log into their dashboard or contact the cooperative office in Poblacion, Bansud.</p>
+    </div>
+    {{> footer }}
+</body>
+</html>

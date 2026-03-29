@@ -1,0 +1,22 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Inventory & Supplies - BLMC</title>
+</head>
+<body class="bg-gradient-to-br from-blue-950 to-blue-900 min-h-screen text-white">
+    {{> head}}
+    <div class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-extrabold mb-4">Inventory & Supplies</h1>
+        <p class="text-lg text-gray-200 mb-6">BLMC maintains an inventory of feeds, vaccines, and other supplies to support our members. Services include:</p>
+        <ul class="list-disc list-inside text-gray-200 space-y-2">
+            <li>Quality-assured feed procurement</li>
+            <li>Group vaccine purchases & distribution</li>
+            <li>Bulk orders for member cooperatives</li>
+            <li>Assistance with sourcing farm inputs</li>
+        </ul>
+        <p class="mt-6 text-gray-300">Members can reserve supplies via the Supply Request form in their dashboard or via the homepage Reserve Supplies button.</p>
+    </div>
+    {{> footer }}
+</body>
+</html>

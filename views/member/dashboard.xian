@@ -1,0 +1,254 @@
+{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+
+<!-- Sidebar -->
+<nav id="sidebar" class="bg-white text-gray-900 shadow-sm w-64 fixed h-full z-50 border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-8 px-1">
+    <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-blue-100 shadow-sm flex-shrink-0">
+      <img src="https://tse4.mm.bing.net/th/id/OIP.vOXRKA3pY1y5srrfOoVGPAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="BLMC" class="w-full h-full object-cover" />
+    </div>
+    <div class="leading-tight">
+      <p class="text-sm font-extrabold text-gray-900">BLMC Member</p>
+      <p class="text-xs text-blue-500 font-semibold">Portal</p>
+    </div>
+  </div>
+
+  <a href="/member/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+  </a>
+  <a href="/member/ledger" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="dollar-sign" class="w-4 h-4"></i> Ledger
+  </a>
+  <a href="/member/requests" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="shopping-cart" class="w-4 h-4"></i> Reserves
+  </a>
+  <a href="/member/notifications" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="bell" class="w-4 h-4"></i> Notifications
+  </a>
+
+  <a href="/member/report" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="edit-3" class="w-4 h-4"></i> Feedback
+  </a>
+
+  <div class="mt-auto pt-4 border-t border-gray-100">
+    <button id="logout-btn" data-logout-url="/member/logout"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-semibold text-sm transition-colors w-full text-left">
+      <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+    </button>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="flex-1 ml-64 min-h-screen flex flex-col" data-main>
+
+  <!-- Top Bar -->
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">Welcome, {{member.firstName}} {{member.lastName}}</h1>
+      <p class="text-xs text-red-500 font-semibold mt-0.5">Member ID: {{member.memberId}}</p>
+    </div>
+    <a href="/member/production" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-red-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:shadow-md transition-all">
+      <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Production Log
+    </a>
+  </div>
+
+  <div class="p-8 flex-1">
+
+    {{#if error_msg}}
+      <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-6">
+        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i> {{error_msg}}
+      </div>
+    {{/if}}
+    {{#if success_msg}}
+      <div class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl mb-6">
+        <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i> {{success_msg}}
+      </div>
+    {{/if}}
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow">
+            <i data-lucide="dollar-sign" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full">Balance</span>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{formatCurrency member.shareBalance}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Share Balance</p>
+      </div>
+
+      <a href="#patronage-section" onclick="document.getElementById('patronage-section').scrollIntoView({behavior:'smooth'}); return false;"
+        class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow block">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow">
+            <i data-lucide="gift" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full">5%/yr</span>
+        </div>
+        <p class="text-2xl font-extrabold text-blue-600">{{formatCurrency member.patronageRefundAccrued}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Patronage Refund</p>
+      </a>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-yellow-500 flex items-center justify-center shadow">
+            <i data-lucide="bell" class="w-5 h-5 text-white"></i>
+          </div>
+          <a href="/member/notifications" class="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded-full hover:bg-orange-100 transition-colors">View</a>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900">{{unreadNotifications}}</p>
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Unread Notifications</p>
+      </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <h3 class="text-sm font-extrabold text-gray-900 uppercase tracking-wide mb-4">Production (Line Chart)</h3>
+        <canvas id="productionLineChart" height="120"></canvas>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <h3 class="text-sm font-extrabold text-gray-900 uppercase tracking-wide mb-4">Reserves (Bar Chart)</h3>
+        <canvas id="memberRequestsBarChart" height="120"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent Production Logs -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-white"></i>
+          </div>
+          <h3 class="text-sm font-extrabold text-gray-900">Recent Production Logs</h3>
+        </div>
+        <a href="/member/production" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow hover:shadow-md transition-all">
+          <i data-lucide="plus" class="w-3 h-3"></i> Add Log
+        </a>
+      </div>
+      <div class="p-6">
+        {{#if recentLogs.length}}
+          <div class="space-y-2 max-h-64 overflow-y-auto">
+            {{#each recentLogs}}
+              <div class="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
+                <span class="text-sm font-semibold text-gray-700">{{formatDate this.logDate}}</span>
+                <span class="text-xs text-gray-500">Eggs: <strong>{{this.eggYield}}</strong> &nbsp;·&nbsp; Feed: <strong>{{this.feedIntake}}kg</strong></span>
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <p class="text-sm text-gray-400 text-center py-6">No production logs yet</p>
+        {{/if}}
+      </div>
+    </div>
+
+    <!-- Patronage Refund -->
+    <div id="patronage-section" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow">
+            <i data-lucide="gift" class="w-4 h-4 text-white"></i>
+          </div>
+          <h3 class="text-sm font-extrabold text-gray-900">Patronage Refund</h3>
+        </div>
+        <a href="/member/membership-receipt" class="inline-flex items-center gap-1.5 text-xs text-blue-600 font-semibold hover:underline">
+          <i data-lucide="receipt" class="w-3.5 h-3.5"></i> View Membership Receipt
+        </a>
+      </div>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Share Balance</p>
+          <p class="text-xl font-extrabold text-gray-900">{{formatCurrency member.shareBalance}}</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Patronage Rate</p>
+          <p class="text-xl font-extrabold text-blue-600">5% / year</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Accrued Refund</p>
+          <p class="text-2xl font-extrabold text-blue-600">{{formatCurrency member.patronageRefundAccrued}}</p>
+          <p class="text-xs text-gray-400 mt-1">Share Balance × 5%</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- Logout Modal -->
+<div id="logout-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+      <span class="font-extrabold text-sm text-gray-900">Confirm Logout</span>
+      <button id="logout-cancel" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <div class="p-5">
+      <p class="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p>
+      <div class="flex gap-3 justify-end">
+        <button id="logout-no" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-colors">Cancel</button>
+        <button id="logout-confirm" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold text-sm hover:shadow-md transition-all">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>lucide.createIcons();</script>
+
+<script>
+  // Charts
+  function renderMemberCharts() {
+    if (!window.Chart) return;
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    new Chart(document.getElementById('productionLineChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{ label: 'Production', data: [10,12,15,13,17,20,18,22,19,21,23,25],
+          borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.4 }]
+      },
+      options: { plugins: { legend: { labels: { color: '#6b7280', font: { size: 11 } } } },
+        scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } }
+    });
+    new Chart(document.getElementById('memberRequestsBarChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{ label: 'Reserves', data: [2,3,4,3,5,6,5,7,6,8,9,10],
+          backgroundColor: '#f59e0b', borderRadius: 6 }]
+      },
+      options: { plugins: { legend: { labels: { color: '#6b7280', font: { size: 11 } } } },
+        scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } }
+    });
+  }
+  if (window.Chart) renderMemberCharts();
+  else window.onChartJsLoaded = renderMemberCharts;
+</script>
+
+
+
+<script>
+  // Logout
+  (function(){
+    const btn = document.getElementById('logout-btn');
+    const modal = document.getElementById('logout-modal');
+    const hide = ()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); };
+    const show = ()=>{ modal.classList.remove('hidden'); modal.classList.add('flex'); };
+    btn.addEventListener('click', show);
+    document.getElementById('logout-cancel').addEventListener('click', hide);
+    document.getElementById('logout-no').addEventListener('click', hide);
+    document.getElementById('logout-confirm').addEventListener('click', ()=>{
+      window.location.href = btn.getAttribute('data-logout-url') || '/member/logout';
+    });
+  })();
+</script>
+
+</body>
+</html>

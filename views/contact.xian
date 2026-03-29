@@ -1,0 +1,19 @@
+{{> head }}
+<title>Contact Developers - BLMC</title>
+<body class="bg-gradient-to-br from-blue-950 to-blue-900 min-h-screen antialiased">
+  <div class="container mx-auto px-6 py-16">
+    <div class="max-w-3xl mx-auto bg-blue-900/30 p-8 rounded-2xl border border-red-600 text-center">
+      <h1 class="text-3xl font-extrabold text-white mb-4">Contact Developers</h1>
+      <p class="text-gray-200 mb-6">For support or questions, reach out to our developer team:</p>
+      <p class="text-white font-semibold">Ken (Lead): <a href="mailto:kenntolentino05@gmail.com" class="text-yellow-300 hover:underline">kenntolentino05@gmail.com</a></p>
+      <p class="text-white font-semibold mt-2">Kate: <a href="mailto:kateagoncillo71@gmail.com" class="text-yellow-300 hover:underline">kateagoncillo71@gmail.com</a></p>
+      <div class="mt-8">
+        <a href="/" class="inline-flex items-center px-4 py-2 bg-white text-blue-900 rounded shadow">Back to Home</a>
+      </div>
+    </div>
+  </div>
+  {{> footer }}
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

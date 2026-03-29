@@ -1,0 +1,136 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dividend & Patronage Calculation - Bansud Livestock Multi-Purpose Cooperative</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-950 to-blue-900 min-h-screen antialiased flex">
+    <!-- Subtle Sparkle Background -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 sparkle-container">
+            <div class="sparkle"></div>
+            <div class="sparkle" style="left: 20%; top: 30%; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="left: 60%; top: 20%; animation-delay: 1s;"></div>
+            <div class="sparkle" style="left: 80%; top: 70%; animation-delay: 1.5s;"></div>
+            <div class="sparkle" style="left: 40%; top: 80%; animation-delay: 2s;"></div>
+            <div class="sparkle" style="left: 10%; top: 50%; animation-delay: 2.5s;"></div>
+            <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 3s;"></div>
+            <div class="sparkle" style="left: 30%; top: 10%; animation-delay: 3.5s;"></div>
+        </div>
+    </div>
+    <!-- Sidebar Nav -->
+    <nav class="bg-gradient-to-b from-blue-950 to-blue-900 text-white shadow-2xl w-64 fixed h-full z-50 border-r border-red-600 flex flex-col py-6 px-4 space-y-2 overflow-y-auto">
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center shadow-lg">
+                <i data-lucide="shield" class="w-6 h-6 text-blue-900"></i>
+            </div>
+            <h1 class="text-xl font-black tracking-tight">BLMC Admin Portal</h1>
+        </div>
+        <a href="/admin/dashboard" class="group flex items-center space-x-3 p-3 rounded-xl hover:bg-yellow-500/10 transition-all duration-300 hover:scale-105 font-semibold">
+            <i data-lucide="layout" class="w-5 h-5 text-red-300 group-hover:text-yellow-300"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="/admin/financial" class="group flex items-center space-x-3 p-3 rounded-xl bg-blue-800/50 font-semibold">
+            <i data-lucide="dollar-sign" class="w-5 h-5 text-yellow-300"></i>
+            <span>Financial</span>
+        </a>
+        <div class="mt-auto">
+            <a href="/logout" class="group flex items-center space-x-3 p-3 rounded-xl hover:bg-red-500/20 transition-all duration-300 hover:scale-105 font-semibold text-red-200">
+                <i data-lucide="log-out" class="w-5 h-5 text-red-300 group-hover:text-red-100"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <div class="flex-1 ml-64">
+        <div class="min-h-screen p-8">
+            <h2 class="text-4xl font-extrabold text-white mb-6 animate-fade-in-down">Dividend & Patronage Calculation - {{year}}</h2>
+            <div class="bg-blue-800 p-6 rounded-2xl shadow-xl border border-red-600 mb-6 animate-fade-in">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="group relative text-center">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-blue-500 to-red-500 flex items-center justify-center shadow-lg">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="text-gray-200 text-sm uppercase font-semibold mb-2">Net Profit</h3>
+                        <p class="text-3xl font-bold text-white">{{formatCurrency netProfit}}</p>
+                    </div>
+                    <div class="group relative text-center">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-red-500 to-yellow-500 flex items-center justify-center shadow-lg">
+                            <i data-lucide="percent" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="text-gray-200 text-sm uppercase font-semibold mb-2">Dividend Rate</h3>
+                        <p class="text-3xl font-bold text-yellow-300">{{dividendRate}}%</p>
+                    </div>
+                    <div class="group relative text-center">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-yellow-500 to-red-500 flex items-center justify-center shadow-lg">
+                            <i data-lucide="award" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="text-gray-200 text-sm uppercase font-semibold mb-2">Patronage Rate</h3>
+                        <p class="text-3xl font-bold text-red-300">{{patronageRate}}%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-blue-800 rounded-2xl shadow-xl border border-red-600 overflow-hidden animate-fade-in">
+                <table class="min-w-full">
+                  <thead class="bg-blue-900">
+                    <tr>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Member ID</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Name</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Share Ratio</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Dividend</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Patronage</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-blue-900/50 divide-y divide-blue-700">
+                    {{#each memberDividends}}
+                      <tr class="group hover:bg-blue-800/50 transition-all duration-300">
+                        <td class="px-6 py-4 whitespace-nowrap text-white font-semibold group-hover:text-yellow-300">{{this.member.memberId}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-200">{{this.member.firstName}} {{this.member.lastName}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-200">{{(multiply this.shareRatio 100)}}%</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-200">{{formatCurrency this.dividend}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-200">{{formatCurrency this.patronage}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-bold text-green-300">{{formatCurrency this.total}}</td>
+                      </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Custom Animations -->
+    <style>
+        @keyframes fade-in-down {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #fbbf24, 0 0 12px #fbbf24;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        .sparkle:nth-child(odd) { animation-duration: 1.5s; }
+        .sparkle:nth-child(even) { animation-duration: 2.5s; }
+        .animate-fade-in-down { animation: fade-in-down 0.8s ease-out forwards; }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+    </style>
+</body>
+</html>

@@ -1,0 +1,244 @@
+{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+    {{> sidebar}}
+
+    <div class="flex-1 ml-64 p-8">
+        {{#if error_msg}}
+          <div class="bg-red-50 border border-red-500 text-red-600 px-4 py-3 rounded-xl mb-4 max-w-2xl animate-fade-in">{{error_msg}}</div>
+        {{/if}}
+        {{#if success_msg}}
+          <div class="bg-blue-50 border border-blue-500 text-blue-600 px-4 py-3 rounded-xl mb-4 max-w-2xl animate-fade-in">{{success_msg}}</div>
+        {{/if}}
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8 animate-fade-in">
+            <div>
+                <h1 class="text-3xl font-extrabold text-blue-600">Program Management</h1>
+                <p class="text-gray-500 mt-1">Manage cooperative programs and activities</p>
+            </div>
+            <button onclick="openCreateModal()"
+                class="inline-flex items-center space-x-2 bg-gradient-to-r from-red-500 to-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+                <span>New Program</span>
+            </button>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-lg border border-blue-200 p-6 flex items-center space-x-4 animate-fade-in">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+                    <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Total Programs</p>
+                    <p class="text-2xl font-extrabold text-blue-600">{{programs.length}}</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg border border-blue-200 p-6 flex items-center space-x-4 animate-fade-in">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                    <i data-lucide="check-circle" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Active</p>
+                    <p class="text-2xl font-extrabold text-green-600">{{activeCount}}</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg border border-red-200 p-6 flex items-center space-x-4 animate-fade-in">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center shadow-lg">
+                    <i data-lucide="pause-circle" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">Inactive</p>
+                    <p class="text-2xl font-extrabold text-red-500">{{inactiveCount}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Programs Grid -->
+        {{#if programs.length}}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-fade-in">
+            {{#each programs}}
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+                <!-- Card Top Color Bar -->
+                <div class="h-2 {{#if this.isActive}}bg-gradient-to-r from-blue-500 to-red-500{{else}}bg-gray-300{{/if}}"></div>
+                
+                <div class="p-6">
+                    <!-- Type Badge & Status -->
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold
+                            {{#if (eq this.type 'Poultry')}}bg-yellow-100 text-yellow-700
+                            {{else if (eq this.type 'Swine')}}bg-pink-100 text-pink-700
+                            {{else if (eq this.type 'Livestock')}}bg-orange-100 text-orange-700
+                            {{else if (eq this.type 'Feeds Subsidy')}}bg-lime-100 text-lime-700
+                            {{else if (eq this.type 'Veterinary Assistance')}}bg-teal-100 text-teal-700
+                            {{else if (eq this.type 'Meat Processing')}}bg-red-100 text-red-700
+                            {{else if (eq this.type 'Livelihood')}}bg-amber-100 text-amber-700
+                            {{else if (eq this.type 'Training & Seminar')}}bg-purple-100 text-purple-700
+                            {{else if (eq this.type 'Loan Program')}}bg-green-100 text-green-700
+                            {{else if (eq this.type 'Savings & Share Capital')}}bg-blue-100 text-blue-700
+                            {{else}}bg-gray-100 text-gray-600{{/if}}">
+                            <i data-lucide="tag" class="w-3 h-3"></i>
+                            <span>{{this.type}}</span>
+                        </span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold {{#if this.isActive}}bg-green-100 text-green-700{{else}}bg-gray-100 text-gray-500{{/if}}">
+                            {{#if this.isActive}}● Active{{else}}○ Inactive{{/if}}
+                        </span>
+                    </div>
+
+                    <!-- Program Name -->
+                    <h3 class="text-xl font-extrabold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{{this.name}}</h3>
+
+                    <!-- Description -->
+                    <p class="text-sm text-gray-500 mb-4 line-clamp-2 min-h-[2.5rem]">
+                        {{#if this.description}}{{this.description}}{{else}}<span class="italic">No description provided.</span>{{/if}}
+                    </p>
+
+                    <!-- Date -->
+                    {{#if this.programDate}}
+                    <div class="flex items-center space-x-2 text-xs text-gray-400 mb-4">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                        <span>{{formatDate this.programDate}}</span>
+                    </div>
+                    {{/if}}
+
+                    <!-- Actions -->
+                    <div class="flex items-center space-x-2 pt-4 border-t border-gray-100">
+                        <button onclick="editProgram({{this.id}}, '{{this.name}}', '{{this.type}}', '{{this.description}}', {{this.isActive}}, '{{this.programDate}}')"
+                            class="flex-1 inline-flex items-center justify-center space-x-2 bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            <span>Edit</span>
+                        </button>
+                        <form method="POST" action="/admin/programs/{{this.id}}/delete" class="flex-1" onsubmit="return confirm('Deactivate this program?')">
+                            <button type="submit"
+                                class="w-full inline-flex items-center justify-center space-x-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                                <i data-lucide="power" class="w-4 h-4"></i>
+                                <span>Deactivate</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="bg-white rounded-2xl shadow-lg border border-blue-200 p-16 text-center animate-fade-in">
+            <div class="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="layers" class="w-10 h-10 text-blue-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-600 mb-2">No programs yet</h3>
+            <p class="text-gray-400 mb-6">Create your first program to get started</p>
+            <button onclick="openCreateModal()" class="inline-flex items-center space-x-2 bg-gradient-to-r from-red-500 to-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+                <span>Create Program</span>
+            </button>
+        </div>
+        {{/if}}
+    </div>
+
+    <!-- Create / Edit Modal -->
+    <div id="programModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 animate-fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center">
+                        <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <h3 id="modal-title" class="text-2xl font-bold text-gray-800">Create New Program</h3>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <form id="programForm" method="POST" action="/admin/programs">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Program Name</label>
+                        <input type="text" name="name" id="modal-name" required placeholder="e.g. Poultry Feeds Program"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Type</label>
+                        <select name="type" id="modal-type" required
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
+                            <option value="Poultry">🐔 Poultry Program</option>
+                            <option value="Swine">🐷 Swine Program</option>
+                            <option value="Livestock">🐄 Livestock Program</option>
+                            <option value="Feeds Subsidy">🌾 Feeds Subsidy</option>
+                            <option value="Veterinary Assistance">💉 Veterinary Assistance</option>
+                            <option value="Meat Processing">🥩 Meat Processing</option>
+                            <option value="Livelihood">🏡 Livelihood Program</option>
+                            <option value="Training & Seminar">📚 Training & Seminar</option>
+                            <option value="Loan Program">💰 Loan Program</option>
+                            <option value="Savings & Share Capital">🏦 Savings & Share Capital</option>
+                            <option value="Other">📋 Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Program Date</label>
+                        <input type="date" name="programDate" id="modal-date"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                        <textarea name="description" id="modal-description" rows="3" placeholder="Describe the program objectives..."
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 resize-none"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeModal()"
+                        class="flex-1 px-4 py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-red-500 to-blue-600 text-white font-semibold hover:shadow-lg transition-all">
+                        <span id="modal-submit-text">Create Program</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function openCreateModal() {
+            document.getElementById('modal-title').textContent = 'Create New Program';
+            document.getElementById('modal-submit-text').textContent = 'Create Program';
+            document.getElementById('programForm').action = '/admin/programs';
+            document.getElementById('modal-name').value = '';
+            document.getElementById('modal-type').value = 'Poultry';
+            document.getElementById('modal-date').value = '';
+            document.getElementById('modal-description').value = '';
+            document.getElementById('programModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function editProgram(id, name, type, description, isActive, programDate) {
+            document.getElementById('modal-title').textContent = 'Edit Program';
+            document.getElementById('modal-submit-text').textContent = 'Save Changes';
+            document.getElementById('programForm').action = `/admin/programs/${id}`;
+            document.getElementById('modal-name').value = name;
+            document.getElementById('modal-type').value = type;
+            document.getElementById('modal-date').value = programDate || '';
+            document.getElementById('modal-description').value = description || '';
+            document.getElementById('programModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('programModal').classList.add('hidden');
+        }
+
+        // Close on backdrop click
+        document.getElementById('programModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+    <style>
+        @keyframes fade-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</body>
+</html>

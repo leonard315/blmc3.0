@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{> head}}
+  <title>Patronage Refund - BLMC POS</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased flex">
+
+<!-- POS Sidebar -->
+<nav class="bg-white shadow-sm w-56 fixed h-full z-50 border-r border-gray-100 flex flex-col py-6 px-4 space-y-1 overflow-y-auto">
+  <div class="flex items-center gap-3 mb-8 px-1">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-red-500 flex items-center justify-center shadow flex-shrink-0">
+      <i data-lucide="shopping-cart" class="w-4 h-4 text-white"></i>
+    </div>
+    <div class="leading-tight">
+      <p class="text-sm font-extrabold text-gray-900">BLMC POS</p>
+      <p class="text-xs text-blue-500 font-semibold">Point of Sale</p>
+    </div>
+  </div>
+  <a href="/pos/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+  </a>
+  <a href="/pos/sale" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="shopping-cart" class="w-4 h-4"></i> New Sale
+  </a>
+  <a href="/pos/sales-history" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="history" class="w-4 h-4"></i> Sales History
+  </a>
+  <a href="/pos/share-balance" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-colors">
+    <i data-lucide="piggy-bank" class="w-4 h-4"></i> Share Balance
+  </a>
+  <a href="/pos/patronage" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+    <i data-lucide="percent" class="w-4 h-4"></i> Patronage Refund
+  </a>
+  <div class="mt-auto pt-4 border-t border-gray-100">
+    <a href="/pos/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-semibold text-sm transition-colors">
+      <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+    </a>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="flex-1 ml-56 min-h-screen flex flex-col">
+
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">Patronage Refund</h1>
+      <p class="text-xs text-gray-400 mt-0.5">5% of annual purchases returned to members</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="clock" class="text-xs text-gray-400 font-mono"></span>
+      <form method="POST" action="/pos/patronage/compute" class="flex items-center gap-2">
+        <input type="number" name="year" value="{{currentYear}}" min="2020" max="2099"
+          class="w-24 px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button type="submit"
+          class="inline-flex items-center gap-1.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow hover:shadow-md transition-all">
+          <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Compute {{currentYear}}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="p-8 flex-1">
+
+    {{#if error_msg}}
+      <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i> {{error_msg}}
+      </div>
+    {{/if}}
+    {{#if success_msg}}
+      <div class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i> {{success_msg}}
+      </div>
+    {{/if}}
+
+    <!-- Explainer -->
+    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl border border-green-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow">
+          <i data-lucide="info" class="w-4 h-4 text-white"></i>
+        </div>
+        <h3 class="text-sm font-extrabold text-gray-900">How Patronage Refund Works</h3>
+      </div>
+      <p class="text-sm text-gray-600 leading-relaxed">
+        Each member earns <strong>5% of their total purchases</strong> within the year as a patronage refund.
+        Example: ₱1,000 in purchases → <strong>₱50.00 refund</strong>. Click "Compute" to calculate and credit all members for the selected year.
+      </p>
+    </div>
+
+    <!-- Summary Stats -->
+    {{#if computed}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-1">Members Processed</p>
+        <p class="text-2xl font-extrabold text-gray-900">{{summary.memberCount}}</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-1">Total Purchases ({{summary.year}})</p>
+        <p class="text-2xl font-extrabold text-gray-900">{{formatCurrency summary.totalPurchases}}</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-1">Total Refund Distributed</p>
+        <p class="text-2xl font-extrabold text-green-600">{{formatCurrency summary.totalRefund}}</p>
+      </div>
+    </div>
+    {{/if}}
+
+    <!-- Member Patronage Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h3 class="text-sm font-extrabold text-gray-900">Member Patronage Refunds — {{currentYear}}</h3>
+      </div>
+      {{#if members.length}}
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100">
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Member</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Annual Purchases</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Refund (5%)</th>
+                <th class="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">Accrued Refund</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              {{#each members}}
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-5 py-3.5">
+                  <p class="text-sm font-semibold text-gray-800">{{this.firstName}} {{this.lastName}}</p>
+                  <p class="text-xs text-gray-400">{{this.memberId}}</p>
+                </td>
+                <td class="px-5 py-3.5 text-sm text-gray-700">{{formatCurrency this.annualPurchases}}</td>
+                <td class="px-5 py-3.5 text-sm font-extrabold text-green-600">{{formatCurrency this.patronageEarned}}</td>
+                <td class="px-5 py-3.5 text-sm font-semibold text-blue-600">{{formatCurrency this.patronageRefundAccrued}}</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{else}}
+        <div class="p-12 text-center">
+          <i data-lucide="inbox" class="w-10 h-10 text-gray-200 mx-auto mb-3"></i>
+          <p class="text-sm text-gray-400">No members found</p>
+        </div>
+      {{/if}}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  (function tick(){ const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'}); setTimeout(tick,1000); })();
+</script>
+</body>
+</html>

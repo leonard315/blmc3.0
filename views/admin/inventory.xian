@@ -1,0 +1,311 @@
+{{> head}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Inventory Management - Bansud Livestock Multi-Purpose Cooperative</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen antialiased flex">
+    <!-- Subtle Sparkle Background -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 sparkle-container">
+            <div class="sparkle"></div>
+            <div class="sparkle" style="left: 20%; top: 30%; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="left: 60%; top: 20%; animation-delay: 1s;"></div>
+            <div class="sparkle" style="left: 80%; top: 70%; animation-delay: 1.5s;"></div>
+            <div class="sparkle" style="left: 40%; top: 80%; animation-delay: 2s;"></div>
+            <div class="sparkle" style="left: 10%; top: 50%; animation-delay: 2.5s;"></div>
+            <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 3s;"></div>
+            <div class="sparkle" style="left: 30%; top: 10%; animation-delay: 3.5s;"></div>
+        </div>
+    </div>
+    {{> sidebar}}
+    <!-- Main Content -->
+    <div class="flex-1 ml-64">
+        {{#if error_msg}}
+          <div class="bg-red-50 border border-red-500 text-red-600 px-4 py-3 rounded-xl relative mb-4 ml-4 mt-4 max-w-2xl animate-fade-in">
+            {{error_msg}}
+          </div>
+        {{/if}}
+        {{#if success_msg}}
+          <div class="bg-blue-50 border border-blue-500 text-blue-600 px-4 py-3 rounded-xl relative mb-4 ml-4 mt-4 max-w-2xl animate-fade-in">
+            {{success_msg}}
+          </div>
+        {{/if}}
+        <div class="min-h-screen p-8">
+            <div class="flex justify-between items-center mb-6 animate-fade-in">
+                <h2 class="text-4xl font-extrabold text-blue-600">Inventory Management</h2>
+                <button onclick="document.getElementById('newItemForm').classList.toggle('hidden')" class="group inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                    <span>New Item</span>
+                </button>
+            </div>
+            <div id="newItemForm" class="hidden bg-white p-6 rounded-2xl shadow-lg border border-blue-200 mb-6 animate-fade-in">
+                <h3 class="text-2xl font-bold text-blue-600 mb-4">Create Inventory Item</h3>
+                <form method="POST" action="/admin/inventory">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="mb-6">
+                      <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Item Name</label>
+                      <div class="relative">
+                          <i data-lucide="tag" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                          <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="text" name="name" id="name" required placeholder="Enter item name">
+                      </div>
+                    </div>
+                    <div class="mb-6">
+                      <label class="block text-gray-700 text-sm font-bold mb-2" for="category">Category</label>
+                      <div class="relative">
+                          <i data-lucide="layers" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                          <select class="w-full py-3 px-10 leading-tight appearance-none border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" name="category" id="category" required>
+                            <option value="feeds">Feeds</option>
+                            <option value="chicken_feeds">Chicken Feeds</option>
+                            <option value="broiler_feeds">Broiler Feeds</option>
+                            <option value="uno_feeds">UNO FEEDS</option>
+                            <option value="hog_feeds">Hog Feeds</option>
+                            <option value="pet_food">Pet Food (Cat/Dog)</option>
+                            <option value="processed_meat">Processed Meat</option>
+                            <option value="fresh_meat">Fresh Meat</option>
+                            <option value="grains">Grains / Rice</option>
+                            <option value="service">Service (Water Station)</option>
+                            <option value="chicks">Chicks</option>
+                            <option value="medicine">Medicine</option>
+                            <option value="eggs">Eggs</option>
+                          </select>
+                      </div>
+                    </div>
+                    <div class="mb-6">
+                      <label class="block text-gray-700 text-sm font-bold mb-2" for="unit">Unit</label>
+                      <div class="relative">
+                          <i data-lucide="ruler" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                          <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="text" name="unit" id="unit" placeholder="kg, bags, pieces" required>
+                      </div>
+                    </div>
+                    <div class="mb-6">
+                      <label class="block text-gray-700 text-sm font-bold mb-2" for="unitPrice">Unit Price</label>
+                      <div class="relative">
+                          <i data-lucide="dollar-sign" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                          <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="number" name="unitPrice" id="unitPrice" step="0.01" required placeholder="0.00">
+                      </div>
+                    </div>
+                    <div class="mb-6">
+                      <label class="block text-gray-700 text-sm font-bold mb-2" for="reorderPoint">Reorder Point</label>
+                      <div class="relative">
+                          <i data-lucide="alert-triangle" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                          <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="number" name="reorderPoint" id="reorderPoint" step="0.01" placeholder="0.00">
+                      </div>
+                    </div>
+                    <div class="col-span-3 flex items-center gap-6 pt-6">
+                      <label class="flex items-center text-gray-700">
+                        <input type="checkbox" name="isPerishable" value="true" class="mr-2 rounded">
+                        <span>Perishable</span>
+                      </label>
+                      <label class="flex items-center text-gray-700">
+                        <input type="checkbox" name="expiryTracking" value="true" class="mr-2 rounded">
+                        <span>Track Expiry</span>
+                      </label>
+                    </div>
+                  </div>
+                  <button class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center justify-center space-x-2 group w-full" type="submit">
+                    <i data-lucide="plus" class="w-5 h-5 group-hover:animate-pulse"></i>
+                    <span>Create Item</span>
+                  </button>
+                </form>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg border border-blue-200 overflow-hidden animate-fade-in">
+                {{#if showCounter}}
+                <div class="p-4 bg-gray-100 border-b border-blue-200 rounded-t-2xl mb-4">
+                  <h3 class="text-2xl font-bold text-gray-800">Counter Products</h3>
+                  <p class="text-sm text-gray-600">Quick actions for counter payments. Use 'Select' to start a quick purchase.</p>
+                  <div class="mt-4 bg-white p-3 rounded-lg border border-gray-200">
+                    <table class="min-w-full">
+                      <thead class="text-gray-700">
+                        <tr>
+                          <th class="px-3 py-2 text-left font-bold">Name</th>
+                          <th class="px-3 py-2 text-left font-bold">Stock</th>
+                          <th class="px-3 py-2 text-left font-bold">Price</th>
+                          <th class="px-3 py-2 text-left font-bold">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {{#each items}}
+                          <tr class="border-t border-gray-200">
+                            <td class="px-3 py-2 text-gray-900">{{this.name}}</td>
+                            <td class="px-3 py-2 text-gray-700">{{this.currentStock}} {{this.unit}}</td>
+                            <td class="px-3 py-2 text-gray-700">{{formatCurrency this.unitPrice}}</td>
+                            <td class="px-3 py-2">
+                              <button onclick="showPurchaseModal({{this.id}}, '{{this.name}}')" class="px-3 py-1 rounded bg-blue-600 text-white font-bold hover:bg-blue-700">Select</button>
+                            </td>
+                          </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                {{/if}}
+                <table class="min-w-full">
+                  <thead class="bg-gray-100 border-b border-blue-200">
+                    <tr>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Name</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Category</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Stock</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Unit Price</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                      <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    {{#each items}}
+                      <tr class="group hover:bg-gray-50 transition-all duration-300 {{#if this.isLowStock}}bg-red-50{{/if}}">
+                        <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-900 group-hover:text-blue-600">{{this.name}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap capitalize text-gray-700">{{this.category}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="{{#if this.isLowStock}}text-red-700 font-bold{{else}}text-green-700{{/if}}">
+                            {{this.currentStock}} {{this.unit}}
+                          </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{formatCurrency this.unitPrice}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          {{#if this.isLowStock}}
+                            <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-700 font-bold">Low Stock</span>
+                          {{else}}
+                            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-bold">In Stock</span>
+                          {{/if}}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <button onclick="showPurchaseModal({{this.id}}, '{{this.name}}')" class="group inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold hover:underline text-sm transition-colors mr-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4 group-hover:animate-pulse"></i>
+                            <span>Purchase</span>
+                          </button>
+                          <button onclick="showDistributeModal({{this.id}}, '{{this.name}}')" class="group inline-flex items-center space-x-2 text-green-600 hover:text-green-700 font-semibold hover:underline text-sm transition-colors">
+                            <i data-lucide="users" class="w-4 h-4 group-hover:animate-pulse"></i>
+                            <span>Distribute</span>
+                          </button>
+                        </td>
+                      </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Purchase Modal -->
+    <div id="purchaseModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-blue-200">
+            <h3 class="text-2xl font-bold text-blue-600 mb-4">Purchase Inventory</h3>
+            <form method="POST" action="/admin/inventory/purchase">
+              <input type="hidden" name="itemId" id="purchaseItemId">
+              <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Quantity</label>
+                <div class="relative">
+                    <i data-lucide="package" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                    <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="number" name="quantity" step="0.01" required placeholder="0.00">
+                </div>
+              </div>
+              <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Unit Price</label>
+                <div class="relative">
+                    <i data-lucide="dollar-sign" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                    <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="number" name="unitPrice" step="0.01" required placeholder="0.00">
+                </div>
+              </div>
+              <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Batch Number (Optional)</label>
+                <div class="relative">
+                    <i data-lucide="hash" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                    <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="text" name="batchNumber" placeholder="Enter batch number">
+                </div>
+              </div>
+              <div class="mb-8">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Expiry Date (Optional)</label>
+                <div class="relative">
+                    <i data-lucide="calendar" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                    <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="date" name="expiryDate">
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <button class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center justify-center space-x-2 group" type="submit">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 group-hover:animate-pulse"></i>
+                    <span>Purchase</span>
+                </button>
+                <button type="button" onclick="document.getElementById('purchaseModal').classList.add('hidden')" class="flex-1 group inline-flex items-center justify-center bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+                    <i data-lucide="x" class="w-5 h-5 group-hover:animate-pulse"></i>
+                    <span>Cancel</span>
+                </button>
+              </div>
+            </form>
+        </div>
+    </div>
+    <!-- Distribute Modal -->
+    <div id="distributeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-blue-200">
+            <h3 class="text-2xl font-bold text-blue-600 mb-4">Distribute Inventory</h3>
+            <form method="POST" action="/admin/inventory/distribute">
+              <input type="hidden" name="itemId" id="distributeItemId">
+              <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Member ID</label>
+                <div class="relative">
+                    <i data-lucide="user" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                    <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="text" name="memberId" required placeholder="Enter member ID">
+                </div>
+              </div>
+              <div class="mb-8">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Quantity</label>
+                <div class="relative">
+                    <i data-lucide="package" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600"></i>
+                    <input class="w-full py-3 px-10 leading-tight placeholder:text-gray-400 border border-gray-300 rounded-xl focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" type="number" name="quantity" step="0.01" required placeholder="0.00">
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <button class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center justify-center space-x-2 group" type="submit">
+                    <i data-lucide="users" class="w-5 h-5 group-hover:animate-pulse"></i>
+                    <span>Distribute</span>
+                </button>
+                <button type="button" onclick="document.getElementById('distributeModal').classList.add('hidden')" class="flex-1 group inline-flex items-center justify-center bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+                    <i data-lucide="x" class="w-5 h-5 group-hover:animate-pulse"></i>
+                    <span>Cancel</span>
+                </button>
+              </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function showPurchaseModal(itemId, itemName) {
+          document.getElementById('purchaseItemId').value = itemId;
+          document.getElementById('purchaseModal').querySelector('h3').textContent = `Purchase: ${itemName}`;
+          document.getElementById('purchaseModal').classList.remove('hidden');
+        }
+        function showDistributeModal(itemId, itemName) {
+          document.getElementById('distributeItemId').value = itemId;
+          document.getElementById('distributeModal').querySelector('h3').textContent = `Distribute: ${itemName}`;
+          document.getElementById('distributeModal').classList.remove('hidden');
+        }
+    </script>
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Custom Animations -->
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #fbbf24, 0 0 12px #fbbf24;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        .sparkle:nth-child(odd) { animation-duration: 1.5s; }
+        .sparkle:nth-child(even) { animation-duration: 2.5s; }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+    </style>
+</body>
+</html>

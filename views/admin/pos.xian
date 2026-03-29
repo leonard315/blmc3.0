@@ -1,0 +1,336 @@
+{{> head}}
+<body class="bg-gray-50 min-h-screen antialiased flex">
+{{> sidebar}}
+
+<div class="flex-1 ml-64 min-h-screen flex flex-col" data-main>
+
+  <!-- Top Bar -->
+  <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-extrabold text-gray-900">Point of Sale</h1>
+      <p class="text-xs text-gray-400 mt-0.5">Counter payment & member account sales</p>
+    </div>
+    <div id="clock" class="text-xs text-gray-400 font-mono"></div>
+  </div>
+
+  <div class="p-6 flex-1">
+
+    {{#if error_msg}}
+      <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i> {{error_msg}}
+      </div>
+    {{/if}}
+    {{#if success_msg}}
+      <div class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i> {{success_msg}}
+      </div>
+    {{/if}}
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+      <!-- LEFT: Product Catalog -->
+      <div class="xl:col-span-2 flex flex-col gap-4">
+
+        <!-- Search products -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <div class="relative">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+            <input id="productSearch" type="text" placeholder="Search products by name or category..."
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-extrabold text-gray-900">Products</h3>
+            <span id="productCount" class="text-xs text-gray-400"></span>
+          </div>
+          <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div class="col-span-full flex items-center justify-center py-10 text-gray-300">
+              <i data-lucide="loader" class="w-6 h-6 animate-spin"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Cart & Checkout -->
+      <div class="flex flex-col gap-4">
+
+        <!-- Member Selection -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Customer</h3>
+          <div class="relative">
+            <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+            <input id="memberSearch" type="text" placeholder="Search member name or ID..."
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+          <!-- Dropdown results -->
+          <div id="memberDropdown" class="hidden mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-20 relative"></div>
+          <!-- Selected member badge -->
+          <div id="selectedMember" class="hidden mt-2 flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl px-3 py-2">
+            <div>
+              <p id="selectedMemberName" class="text-sm font-bold text-blue-800"></p>
+              <p id="selectedMemberBalance" class="text-xs text-blue-500"></p>
+            </div>
+            <button onclick="clearMember()" class="text-blue-400 hover:text-red-500 transition-colors">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div id="walkInRow" class="mt-2">
+            <input id="walkInName" type="text" placeholder="Walk-in customer name (optional)"
+              class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+        </div>
+
+        <!-- Cart -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex-1">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide">Cart</h3>
+            <button onclick="clearCart()" class="text-xs text-red-400 hover:text-red-600 font-semibold transition-colors">Clear</button>
+          </div>
+          <div id="cartItems" class="space-y-2 min-h-[80px]">
+            <p class="text-xs text-gray-400 text-center py-6">No items added yet</p>
+          </div>
+          <!-- Totals -->
+          <div class="border-t border-gray-100 mt-3 pt-3 space-y-1.5">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">Subtotal</span>
+              <span id="subtotal" class="font-semibold text-gray-800">₱0.00</span>
+            </div>
+            <div class="flex justify-between text-sm items-center">
+              <span class="text-gray-500">Discount</span>
+              <div class="flex items-center gap-1">
+                <span class="text-gray-400 text-xs">₱</span>
+                <input id="discountInput" type="number" min="0" step="0.01" value="0"
+                  oninput="updateTotals()"
+                  class="w-20 text-right border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400" />
+              </div>
+            </div>
+            <div class="flex justify-between text-base font-extrabold border-t border-gray-100 pt-2 mt-1">
+              <span class="text-gray-900">Total</span>
+              <span id="total" class="text-blue-600">₱0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Payment Method</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="setPayment('cash')" id="btn-cash"
+              class="payment-btn active flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 font-bold text-sm transition-all">
+              <i data-lucide="banknote" class="w-4 h-4"></i> Cash
+            </button>
+            <button onclick="setPayment('credit')" id="btn-credit"
+              class="payment-btn flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 font-bold text-sm transition-all hover:border-gray-300">
+              <i data-lucide="credit-card" class="w-4 h-4"></i> Credit
+            </button>
+          </div>
+          <p id="creditNote" class="hidden text-xs text-orange-500 mt-2 flex items-center gap-1">
+            <i data-lucide="info" class="w-3 h-3"></i> Credit adds to member's loan balance
+          </p>
+        </div>
+
+        <!-- Checkout Button -->
+        <form method="POST" action="/admin/pos/sale" id="posForm">
+          <input type="hidden" name="items" id="itemsInput">
+          <input type="hidden" name="paymentMethod" id="paymentMethodInput" value="cash">
+          <input type="hidden" name="discount" id="discountHidden">
+          <input type="hidden" name="memberId" id="memberIdInput">
+          <input type="hidden" name="customerName" id="customerNameInput">
+          <button type="button" onclick="submitSale()"
+            class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 rounded-xl shadow hover:shadow-md transition-all text-sm">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            Complete Sale
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+lucide.createIcons();
+
+// Clock
+(function tick(){ const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'}); setTimeout(tick,1000); })();
+
+// ── State ──
+let cart = [];
+let allProducts = [];
+let selectedMemberId = null;
+let paymentMethod = 'cash';
+
+// ── Load Products ──
+async function loadProducts() {
+  try {
+    const res = await fetch('/api/inventory/pos-items');
+    allProducts = await res.json();
+    renderProducts(allProducts);
+    document.getElementById('productCount').textContent = allProducts.length + ' items';
+  } catch(e) {
+    document.getElementById('productGrid').innerHTML = '<p class="col-span-full text-center text-sm text-red-400 py-6">Failed to load products</p>';
+  }
+}
+
+function renderProducts(items) {
+  const grid = document.getElementById('productGrid');
+  if (!items.length) {
+    grid.innerHTML = '<p class="col-span-full text-center text-sm text-gray-400 py-6">No products found</p>';
+    return;
+  }
+  grid.innerHTML = items.map(item => `
+    <button onclick='addToCart(${JSON.stringify(item)})'
+      class="group text-left bg-gray-50 hover:bg-blue-50 border border-gray-100 hover:border-blue-200 rounded-xl p-3 transition-all hover:shadow-sm">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-2 shadow">
+        <i data-lucide="package" class="w-4 h-4 text-white"></i>
+      </div>
+      <p class="text-xs font-bold text-gray-800 leading-tight group-hover:text-blue-700 truncate">${item.name}</p>
+      <p class="text-xs text-gray-400 mt-0.5 capitalize">${item.category}</p>
+      <p class="text-sm font-extrabold text-blue-600 mt-1">₱${parseFloat(item.unitPrice).toFixed(2)}</p>
+      <p class="text-xs text-gray-400">${parseFloat(item.currentStock)} ${item.unit} left</p>
+    </button>
+  `).join('');
+  lucide.createIcons();
+}
+
+// Product search filter
+document.getElementById('productSearch').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  renderProducts(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)));
+});
+
+// ── Cart ──
+function addToCart(item) {
+  const existing = cart.find(c => c.itemId === item.id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ itemId: item.id, name: item.name, quantity: 1, unitPrice: parseFloat(item.unitPrice), unit: item.unit, maxStock: parseFloat(item.currentStock) });
+  }
+  renderCart();
+}
+
+function removeFromCart(idx) { cart.splice(idx, 1); renderCart(); }
+function clearCart() { cart = []; renderCart(); }
+
+function changeQty(idx, delta) {
+  cart[idx].quantity = Math.max(1, Math.min(cart[idx].maxStock, cart[idx].quantity + delta));
+  renderCart();
+}
+
+function renderCart() {
+  const el = document.getElementById('cartItems');
+  if (!cart.length) {
+    el.innerHTML = '<p class="text-xs text-gray-400 text-center py-6">No items added yet</p>';
+  } else {
+    el.innerHTML = cart.map((item, i) => `
+      <div class="flex items-center gap-2 py-2 border-b border-gray-50 last:border-0">
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-bold text-gray-800 truncate">${item.name}</p>
+          <p class="text-xs text-gray-400">₱${item.unitPrice.toFixed(2)} / ${item.unit}</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <button onclick="changeQty(${i},-1)" class="w-6 h-6 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-sm transition-colors">−</button>
+          <span class="text-xs font-bold text-gray-800 w-6 text-center">${item.quantity}</span>
+          <button onclick="changeQty(${i},1)" class="w-6 h-6 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-sm transition-colors">+</button>
+        </div>
+        <span class="text-xs font-bold text-blue-600 w-16 text-right">₱${(item.quantity * item.unitPrice).toFixed(2)}</span>
+        <button onclick="removeFromCart(${i})" class="text-gray-300 hover:text-red-400 transition-colors">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    `).join('');
+  }
+  updateTotals();
+  lucide.createIcons();
+}
+
+function updateTotals() {
+  const subtotal = cart.reduce((s, i) => s + i.quantity * i.unitPrice, 0);
+  const discount = Math.max(0, parseFloat(document.getElementById('discountInput').value) || 0);
+  const total = Math.max(0, subtotal - discount);
+  document.getElementById('subtotal').textContent = '₱' + subtotal.toFixed(2);
+  document.getElementById('total').textContent = '₱' + total.toFixed(2);
+}
+
+// ── Member Search ──
+let memberSearchTimer;
+document.getElementById('memberSearch').addEventListener('input', function() {
+  clearTimeout(memberSearchTimer);
+  const q = this.value.trim();
+  if (q.length < 2) { document.getElementById('memberDropdown').classList.add('hidden'); return; }
+  memberSearchTimer = setTimeout(async () => {
+    const res = await fetch('/api/members/search?q=' + encodeURIComponent(q));
+    const members = await res.json();
+    const dd = document.getElementById('memberDropdown');
+    if (!members.length) { dd.classList.add('hidden'); return; }
+    dd.innerHTML = members.map(m => `
+      <button type="button" onclick='selectMember(${JSON.stringify(m)})'
+        class="w-full text-left px-4 py-2.5 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0">
+        <p class="text-sm font-bold text-gray-800">${m.firstName} ${m.lastName}</p>
+        <p class="text-xs text-gray-400">${m.memberId} · Loan: ₱${parseFloat(m.loanBalance||0).toFixed(2)}</p>
+      </button>
+    `).join('');
+    dd.classList.remove('hidden');
+  }, 300);
+});
+
+function selectMember(m) {
+  selectedMemberId = m.memberId;
+  document.getElementById('memberSearch').value = '';
+  document.getElementById('memberDropdown').classList.add('hidden');
+  document.getElementById('selectedMemberName').textContent = m.firstName + ' ' + m.lastName;
+  document.getElementById('selectedMemberBalance').textContent = m.memberId + ' · Loan balance: ₱' + parseFloat(m.loanBalance||0).toFixed(2);
+  document.getElementById('selectedMember').classList.remove('hidden');
+  document.getElementById('walkInRow').classList.add('hidden');
+}
+
+function clearMember() {
+  selectedMemberId = null;
+  document.getElementById('selectedMember').classList.add('hidden');
+  document.getElementById('walkInRow').classList.remove('hidden');
+  document.getElementById('memberSearch').value = '';
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#memberSearch') && !e.target.closest('#memberDropdown')) {
+    document.getElementById('memberDropdown').classList.add('hidden');
+  }
+});
+
+// ── Payment Method ──
+function setPayment(method) {
+  paymentMethod = method;
+  document.getElementById('paymentMethodInput').value = method;
+  document.querySelectorAll('.payment-btn').forEach(b => {
+    b.classList.remove('active', 'border-blue-500', 'bg-blue-50', 'text-blue-700');
+    b.classList.add('border-gray-200', 'text-gray-500');
+  });
+  const active = document.getElementById('btn-' + method);
+  active.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+  active.classList.remove('border-gray-200', 'text-gray-500');
+  document.getElementById('creditNote').classList.toggle('hidden', method !== 'credit');
+}
+
+// ── Submit ──
+function submitSale() {
+  if (!cart.length) { alert('Please add at least one item to the cart.'); return; }
+  if (paymentMethod === 'credit' && !selectedMemberId) { alert('Credit payment requires a member to be selected.'); return; }
+  const discount = Math.max(0, parseFloat(document.getElementById('discountInput').value) || 0);
+  document.getElementById('itemsInput').value = JSON.stringify(cart.map(i => ({ itemId: i.itemId, name: i.name, quantity: i.quantity, unitPrice: i.unitPrice, unit: i.unit })));
+  document.getElementById('discountHidden').value = discount;
+  document.getElementById('memberIdInput').value = selectedMemberId || '';
+  document.getElementById('customerNameInput').value = document.getElementById('walkInName').value || '';
+  document.getElementById('posForm').submit();
+}
+
+loadProducts();
+</script>
+</body>
+</html>
