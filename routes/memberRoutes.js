@@ -23,6 +23,7 @@
     SOFTWARE.
     */
 import express from "express";
+import { Op } from "sequelize";
 import { isMember } from "../middleware/auth.js";
 import { memberDashboard } from "../controllers/dashboardController.js";
 import {
@@ -72,7 +73,6 @@ router.get("/remittances", remittanceHistory);
 router.get("/supply-request", supplyRequestPage);
 router.post("/supply-request", submitSupplyRequest);
 router.get("/requests", myRequests);
-import { Op } from "sequelize";
 router.get("/requests/:id/receipt", async (req, res) => {
   const { id } = req.params;
   const memberId = req.session.memberId;

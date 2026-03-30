@@ -1,7 +1,3 @@
-// ...existing code...
-// Simple admin notification page (custom, not the main notifications management)
-import { adminNotificationSimplePage } from "../controllers/notificationController.js";
-import { adminRequestList, updateRequestStatus, sendRequestReceipt } from "../controllers/adminRequestController.js";
 /*
     MIT License
     
@@ -75,11 +71,12 @@ import {
 } from "../controllers/notificationController.js";
 import { adminListInquiries, updateInquiryStatus } from "../controllers/inquiryController.js";
 import { loanList, addLoan, recordPayment } from "../controllers/loanController.js";
-
+import { adminNotificationSimplePage } from "../controllers/notificationController.js";
+import { adminRequestList, updateRequestStatus, sendRequestReceipt } from "../controllers/adminRequestController.js";
+import { seedAdminNotification } from "../controllers/seedNotificationController.js";
 
 const router = express.Router();
-// Debug: Seed a test notification
-import { seedAdminNotification } from "../controllers/seedNotificationController.js";
+
 // Debug route to create a test notification
 router.get("/seed-notification", seedAdminNotification);
 

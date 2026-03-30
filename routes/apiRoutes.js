@@ -31,12 +31,12 @@ import { sendSenderVerification, confirmSenderVerification } from "../controller
 import { Op } from "sequelize";
 import multer from "multer";
 import path from "path";
+import fs from 'fs';
 
 const router = express.Router();
 
 // configure uploads
 const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-import fs from 'fs';
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 const storage = multer.diskStorage({
   destination: function (req, file, cb) { cb(null, uploadDir); },

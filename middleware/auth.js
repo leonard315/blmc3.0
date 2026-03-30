@@ -62,7 +62,7 @@ export const isAuthenticated = async (req, res, next) => {
             { targetAudience: 'all' },
             { targetAudience: 'members' },
             // Match specific audience where specificMemberIds JSON contains this memberId
-            notifSequelize.literal(`targetAudience = 'specific' AND JSON_CONTAINS(specificMemberIds, '["${memberId}"]')`)
+            notifSequelize.literal(`targetAudience = 'specific' AND JSON_CONTAINS(specificMemberIds, '"${memberId}"')`)
           ]
         },
         attributes: ['id']
